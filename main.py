@@ -69,7 +69,7 @@ class MovieScanner:
         # Now process each file
         for root, file in all_files:
             print(f"Found file: {file}")
-            if file.lower().endswith(('.mp4', '.mkv', '.avi', '.mov')):
+            if file.lower().endswith(('.mp4', '.mkv', '.avi', '.mov', '.webm', '.mpg', '.mpeg', '.wmv', '.flv', '.m4v', '.vob', '.divx')):
                 self.processed += 1
                 full_path = os.path.join(root, file)
                 print(f"Found movie file: {full_path}")
