@@ -8,15 +8,17 @@
 
 ## Installation
 
+### From Source
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/Nsfr750/movie_catalog.git
    cd movie_catalog
    ```
 
-2. Install dependencies:
+2. Install in development mode:
    ```bash
-   pip install -r requirements.txt
+   pip install -e .
    ```
 
 3. Configure MySQL:
@@ -26,8 +28,53 @@
 
 4. Run the application:
    ```bash
-   python main.py
+   movie-catalog
    ```
+
+### From PyPI
+
+1. Install from PyPI:
+   ```bash
+   pip install movie-catalog
+   ```
+
+2. Run the application:
+   ```bash
+   movie-catalog
+   ```
+
+## Development Setup
+
+For development, install the package with development dependencies:
+
+```bash
+pip install -e ".[dev]"
+```
+
+This will install all required development tools including:
+- Code formatters (black, isort)
+- Linters (flake8, pylint)
+- Type checking (mypy)
+- Testing tools (pytest, pytest-cov)
+- Documentation tools (sphinx)
+
+### Running Tests
+
+To run the test suite:
+
+```bash
+pytest tests/
+```
+
+### Building Documentation
+
+To build the documentation:
+
+```bash
+sphinx-build -b html docs/ docs/_build/html
+```
+
+The built documentation will be available in `docs/_build/html/`
 
 ## Initial Setup
 
