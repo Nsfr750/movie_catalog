@@ -7,7 +7,7 @@ class About:
     def show_about(root):
         about_dialog = tk.Toplevel(root)
         about_dialog.title('About Movie Catalog')
-        about_dialog.geometry('500x300') # larg X alt
+        about_dialog.geometry('400x250') # larg X alt
         about_dialog.transient(root)
         about_dialog.grab_set()
 
@@ -19,10 +19,10 @@ class About:
         version = ttk.Label(about_dialog, text=f'Version {get_version()}')
         version.pack()
 
-        description = ttk.Label(about_dialog, text='A Python GUI application for cataloging movies on your HDD/SSD/USBKEY/CD/DVD/BluRay.\n This application recursively scans directories, extracts genres from directory names,\n and identifies movie files based on their extensions.', justify=tk.CENTER)
-        description.pack(pady=20)
+        description = ttk.Label(about_dialog, text='A modern Python GUI application for\n managing and cataloging your movie collection.', justify=tk.CENTER)
+        description.pack(pady=10)
 
         copyright = ttk.Label(about_dialog, text=' 2025 Nsfr750')
         copyright.pack(pady=10)
 
-        ttk.Button(about_dialog, text='Close', command=about_dialog.destroy).pack(pady=20)
+        ttk.Button(about_dialog, text='Close', command=about_dialog.destroy).pack(pady=10)
