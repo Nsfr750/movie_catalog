@@ -7,7 +7,7 @@ class Help:
     def show_help(root):
         help_dialog = tk.Toplevel(root)
         help_dialog.title('Help')
-        help_dialog.geometry('500x500')
+        help_dialog.geometry('500x400')
         help_dialog.transient(root)
         help_dialog.grab_set()
 
@@ -20,7 +20,7 @@ class Help:
         notebook.add(usage_frame, text='Usage')
         
         usage_text = '''
-        Movie Catalog Application Help
+        Movie Catalog Help
         
         1. Basic Usage:
         - Click "Browse" to select your movie directory
@@ -41,7 +41,7 @@ class Help:
         '''
         
         usage_label = ttk.Label(usage_frame, text=usage_text, justify='left')
-        usage_label.pack(padx=10, pady=10)
+        usage_label.pack(padx=5, pady=5)
 
         # Documentation Tab
         docs_frame = ttk.Frame(notebook)
@@ -55,7 +55,7 @@ class Help:
         '''
         
         docs_label = ttk.Label(docs_frame, text=docs_text, justify='left')
-        docs_label.pack(padx=10, pady=10)
+        docs_label.pack(padx=5, pady=5)
 
         # Support Tab
         support_frame = ttk.Frame(notebook)
@@ -69,8 +69,8 @@ class Help:
         '''
         
         support_label = ttk.Label(support_frame, text=support_text, justify='left')
-        support_label.pack(padx=10, pady=10)
+        support_label.pack(padx=5, pady=5)
 
         # Add a close button
         close_btn = ttk.Button(help_dialog, text='Close', command=help_dialog.destroy)
-        close_btn.pack(pady=10)
+        close_btn.pack(pady=5)
