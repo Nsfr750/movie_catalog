@@ -42,22 +42,82 @@ A modern Python GUI application for managing and cataloging your movie collectio
 
 - Python 3.8 or higher
 - Windows or Linux operating system
-- SQLite3 (included with Python)
+- MySQL (install using pip)
 
 ## Installation
 
-The application uses Python's built-in modules and requires no external dependencies:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Nsfr750/movie_catalog.git
+   cd movie_catalog
+   ```
 
-```bash
-# Clone the repository
-git clone https://github.com/Nsfr750/movie_catalog.git
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-# Navigate to the project directory
-cd movie_catalog
+3. Configure MySQL database:
+   - Open the application
+   - Click on "Database" in the menu
+   - Configure your MySQL connection settings
+   - Click "Save" to apply the configuration
 
-# Run the application
-python main.py
-```
+4. Run the application:
+   ```bash
+   python main.py
+   ```
+
+## Usage
+
+1. Create or open a database:
+   - Click "Database" in the menu
+   - Choose "New Database" or "Open Database"
+   - Follow the configuration wizard
+
+2. Select a directory containing your movies:
+   - Click "Browse" to select your movie directory
+   - Movies should be organized in genre folders
+   - Supported formats: .mp4, .mkv, .avi, .mov, .webm, .mpg, .mpeg, .wmv, .flv, .m4v, .vob, .divx
+
+3. Click "Scan Movies" to scan for movies:
+   - Progress will be shown in the progress bar
+   - Status updates will appear in the status bar
+   - Movies will be automatically organized by genre
+
+4. Use the tree view to browse your collection:
+   - Movies are displayed with genre, name, and path
+   - Export your collection to CSV using the "File" menu
+   - Use "Help" menu for more information
+
+## Database Configuration
+
+The application uses MySQL as its database backend. You can configure the database settings through the GUI:
+
+1. Click "Database" in the menu
+2. Click "Configure Database"
+3. Enter your MySQL connection details:
+   - Host (default: localhost)
+   - Username (default: root)
+   - Password
+   - Database name (default: movie_catalog)
+4. Click "Save" to apply the configuration
+
+## Supported Video Formats
+
+The application supports the following video file formats:
+- .mp4 (MPEG-4)
+- .mkv (Matroska)
+- .avi (Audio Video Interleave)
+- .mov (QuickTime)
+- .webm (WebM)
+- .mpg (MPEG-1)
+- .mpeg (MPEG)
+- .wmv (Windows Media Video)
+- .flv (Flash Video)
+- .m4v (MPEG-4 Video)
+- .vob (Video Object)
+- .divx (DivX)
 
 ## Usage Guide
 
@@ -104,9 +164,17 @@ The application supports the following movie file extensions:
 - `.mkv`
 - `.avi`
 - `.mov`
+- `.webm`
+- `.mpg`
+- `.mpeg`
+- `.wmv`
+- `.flv`
+- `.m4v`
+- `.vob`
+- `.divx`
 
 ### Database Structure
-The application creates a SQLite database with the following schema:
+The application creates a MySQL database with the following schema:
 ```sql
 CREATE TABLE movies (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -114,6 +182,7 @@ CREATE TABLE movies (
     movie_name TEXT,
     path TEXT UNIQUE,
     last_scanned DATETIME
+```
 
 ## Contributing
 
@@ -134,6 +203,30 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Special thanks to sponsors who support this project
 
 ## Version
+
+Current version: 1.6.0
+
+## Project Organization
+
+The application assumes your movie files are organized in a structured folder hierarchy:
+```
+movies/
+├── Action/
+│   ├── ActionMovie1.mkv
+│   └── ActionMovie2.mp4
+├── Comedy/
+│   ├── ComedyMovie1.mkv
+└── Drama/
+    └── DramaMovie1.mp4
+```
+
+## Development
+
+For development purposes, you can install optional dependencies:
+```bash
+pip install -r requirements.txt
+```
+
 ## Version History
 
 For detailed version history, please refer to the [CHANGELOG.md](CHANGELOG.md) file.
