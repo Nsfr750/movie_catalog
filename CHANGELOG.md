@@ -1,22 +1,31 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
 
 ## [1.5.0] - 2025-05-19
 ### Added
 - Database creation in user's Documents folder
 - Improved error handling for database operations
 - Tree view initialization checks
+- Version history tracking
 
 ### Changed
 - Removed custom theme system for simpler GUI
 - Improved database path handling
 - Better error messages for database operations
+- Enhanced documentation
 
 ### Fixed
 - Tree view initialization errors
 - Database creation permission issues
 - GUI component initialization order
+- Various UI layout issues
+
+[Unreleased]: https://github.com/Nsfr750/movie_catalog/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/Nsfr750/movie_catalog/compare/v1.4.0...v1.5.0
 
 ## [1.4.0] - 2025-05-19
 ### Added
@@ -78,9 +87,6 @@ All notable changes to this project will be documented in this file.
 - Progress tracking
 - Tree view display of results
 - Genre and movie name extraction
-
-### Changed
-- Switched from PyQt6 to tkinter GUI framework
 
 ## [1.0.0] - 2025-05-19
 ### Added
