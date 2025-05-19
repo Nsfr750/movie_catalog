@@ -19,7 +19,7 @@ class About:
         version = ttk.Label(about_dialog, text=f'Version {get_version()}')
         version.pack()
 
-        description = ttk.Label(about_dialog, text='A Python GUI application for cataloging movies on your hard disk.\n This application recursively scans directories, extracts genres from directory names,\n and identifies movie files based on their extensions.', justify=tk.CENTER)
+        description = ttk.Label(about_dialog, text='A Python GUI application for cataloging movies on your HDD/SSD/USBKEY/CD/DVD/BluRay.\n This application recursively scans directories, extracts genres from directory names,\n and identifies movie files based on their extensions.', justify=tk.CENTER)
         description.pack(pady=20)
 
         copyright = ttk.Label(about_dialog, text=' 2025 Nsfr750')
