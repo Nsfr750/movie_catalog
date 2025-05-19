@@ -114,70 +114,26 @@ CREATE TABLE movies (
     movie_name TEXT,
     path TEXT UNIQUE,
     last_scanned DATETIME
-)
-```
-
-### UI Components
-
-- **File Menu**
-  - Database operations
-  - Exit application
-
-- **Help Menu**
-  - Documentation
-  - About dialog
-  - Sponsor options
-
-- **Main Interface**
-  - Directory selection
-  - Scan controls
-  - Progress tracking
-  - Movie tree view
-  - Status bar
-
-## Development
-
-For development purposes, you can install optional dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-## Project Organization
-
-The application assumes your movie files are organized in a structured folder hierarchy:
-```
-movies/
-├── Action/
-│   ├── ActionMovie1.mkv
-│   └── ActionMovie2.mp4
-├── Comedy/
-│   ├── ComedyMovie1.mkv
-└── Drama/
-    └── DramaMovie1.mp4
-```
 
 ## Contributing
 
 1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support
-
-For support, please open an issue in the [GitHub Issues](https://github.com/Nsfr750/movie_catalog/issues) page.
-
 ## Acknowledgments
 
-- Thanks to all contributors and users who have helped improve this project
-- Special thanks to the Python community for their excellent documentation and support
+- Thanks to all contributors
+- Special thanks to the Python community
+- Special thanks to sponsors who support this project
 
+## Version
 ## Version History
 
 For detailed version history, please refer to the [CHANGELOG.md](CHANGELOG.md) file.
