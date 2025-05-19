@@ -1,99 +1,112 @@
 # Movie Catalog Application
 
-A Python GUI application for cataloging movies on your hard disk. This application recursively scans directories, extracts genres from directory names, and identifies movie files based on their extensions.
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%26%20Linux-blue.svg)](https://www.python.org/downloads/)
 
-## Features
+A modern Python GUI application for managing and cataloging your movie collection. This tool helps you organize your movies by automatically scanning directories, extracting genres from folder names, and maintaining a comprehensive database of your collection.
 
-- **File Management**:
-  - Create new database in Documents folder
-  - Open existing database
-  - Close current database
-  - Exit application
+## Key Features
 
-- **Movie Cataloging**:
+- **Smart Movie Organization**
+  - Automatic genre detection from folder names
   - Recursive directory scanning
-  - Genre extraction from directory names
-  - Movie name extraction from filenames
+  - Intelligent movie file recognition
   - Progress tracking during scanning
-  - File tree view display
 
-- **Data Persistence**:
-  - SQLite database storage
+- **Powerful Database Management**
+  - SQLite-based persistent storage
+  - Multiple database support
+  - Thread-safe operations
   - CSV export functionality
-  - Load from database capability
-  - Database state management
+  - Automatic database creation and management
 
-- **User Interface**:
-  - Modern GUI using tkinter
-  - Intuitive menu system
+- **Modern User Interface**
+  - Clean, intuitive tkinter-based GUI
+  - Responsive design
   - Status bar with real-time feedback
-  - Enhanced treeview with improved styling
-  - Success/error messages
+  - Enhanced treeview display
+  - Platform-specific theming
+  - Professional error handling
+
+- **Advanced Features**
+  - Database state management
+  - File tree view display
+  - Progress tracking
+  - Success/error notifications
   - Help documentation
-  - About dialog with version info
+  - Version information
   - Sponsor options
+
+## System Requirements
+
+- Python 3.8 or higher
+- Windows or Linux operating system
+- SQLite3 (included with Python)
 
 ## Installation
 
-No external dependencies required - the application uses Python's built-in modules:
-- tkinter (GUI framework)
-- sqlite3 (Database management)
+The application uses Python's built-in modules and requires no external dependencies:
 
-## Usage
-
-1. Run the application:
 ```bash
+# Clone the repository
+git clone https://github.com/Nsfr750/movie_catalog.git
+
+# Navigate to the project directory
+cd movie_catalog
+
+# Run the application
 python main.py
 ```
 
-2. Database Management:
-   - Create a new database from File menu
-   - Open an existing database
-   - Close current database
-   - Exit application
+## Usage Guide
 
-3. Movie Cataloging:
-   - Click "Browse" to select your movie directory
-   - Click "Scan Movies" to start the scanning process
-   - The application will display the progress and show the catalogued movies in a tree view
-   - Use "Export to CSV" to save movies to a CSV file
-   - Use "Load from Database" to view previously scanned movies
+### Database Management
+1. Create a new database:
+   - Go to File menu > New Database
+   - A new database will be created in your Documents folder
 
-## GUI Features
+2. Open existing database:
+   - File menu > Open Database
+   - Select your existing *.db file
 
-- Improved layout with labeled frames
-- Status bar showing application state and version
-- Enhanced treeview with better scrolling
-- Proper widget organization
-- Improved visual hierarchy
-- Better spacing and padding
-- Responsive design
+3. Close current database:
+   - File menu > Close Database
+   - All unsaved changes will be lost
 
-## Database Management
+4. Exit application:
+   - File menu > Exit
+   - Or click the close button
 
-- The application uses SQLite for data persistence
-- Database operations are thread-safe
-- Database state is properly managed
-- Multiple database support through file management
-- Automatic database creation on first use
+### Movie Cataloging
+1. Select movie directory:
+   - Click "Browse" button
+   - Navigate to your movie collection folder
 
-## File Management
+2. Start scanning:
+   - Click "Scan Movies" button
+   - Monitor progress in the status bar
+   - View results in the tree view
 
-- Create new database (clears existing data)
-- Open existing database files (*.db)
-- Close current database connection
-- Exit application safely
+3. Export data:
+   - Click "Export to CSV" button
+   - Save your movie collection as a CSV file
 
-## Supported Movie File Extensions
+4. View existing database:
+   - Click "Load from Database" button
+   - View previously scanned movies
 
-- .mp4
-- .mkv
-- .avi
-- .mov
+## Technical Details
 
-## Database Schema
+### Supported File Formats
+The application supports the following movie file extensions:
+- `.mp4`
+- `.mkv`
+- `.avi`
+- `.mov`
 
-The application creates a SQLite database (`movies.db`) with the following schema:
+### Database Structure
+The application creates a SQLite database with the following schema:
 ```sql
 CREATE TABLE movies (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -104,37 +117,35 @@ CREATE TABLE movies (
 )
 ```
 
-## UI Components
+### UI Components
 
-- File Menu:
-  - New Database
-  - Open Database
-  - Close Database
-  - Exit
+- **File Menu**
+  - Database operations
+  - Exit application
 
-- Help Menu:
-  - Help Documentation
-  - About Dialog
-  - Sponsor Options
+- **Help Menu**
+  - Documentation
+  - About dialog
+  - Sponsor options
 
-- Main Interface:
+- **Main Interface**
   - Directory selection
   - Scan controls
-  - Progress bar
+  - Progress tracking
   - Movie tree view
-  - Database operations buttons
   - Status bar
 
-## Development Setup
+## Development
 
-For development, you can install optional dependencies:
+For development purposes, you can install optional dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-## Note
+## Project Organization
 
-The application assumes that your movie files are organized in directories named after their genres. For example:
+The application assumes your movie files are organized in a structured folder hierarchy:
 ```
 movies/
 ├── Action/
@@ -145,3 +156,28 @@ movies/
 └── Drama/
     └── DramaMovie1.mp4
 ```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+For support, please open an issue in the [GitHub Issues](https://github.com/Nsfr750/movie_catalog/issues) page.
+
+## Acknowledgments
+
+- Thanks to all contributors and users who have helped improve this project
+- Special thanks to the Python community for their excellent documentation and support
+
+## Version History
+
+For detailed version history, please refer to the [CHANGELOG.md](CHANGELOG.md) file.
