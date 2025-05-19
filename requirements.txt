@@ -1,0 +1,32 @@
+# Built-in Python modules - no installation needed
+# tkinter - GUI framework
+# sqlite3 - Database management
+
+# Optional development dependencies
+black>=23.7.0  # Code formatter
+isort>=5.12.0  # Import sorter
+flake8>=6.1.0  # Code linter
+pytest>=7.4.0  # Testing framework
+pylint>=2.17.0  # Code analysis
+mypy>=1.4.0  # Type checking
+coverage>=7.2.0  # Code coverage
+sphinx>=6.2.0  # Documentation generator
+twine>=4.0.0  # Package distribution
+wheel>=0.40.0  # Package building
+
+# Optional GUI enhancements
+pillow>=10.0.0  # Image handling
+pygments>=2.15.0  # Syntax highlighting
+
+# Optional database tools
+sqlite3-tools>=0.1.0  # SQLite database management
+
+# Optional system tools
+psutil>=5.9.0  # System monitoring
+
+# Optional logging
+loguru>=0.7.0  # Enhanced logging
+
+# Optional UI testing
+pytest-qt>=4.0.0  # Qt testing
+pytest-tkinter>=0.1.0  # Tkinter testing
