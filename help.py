@@ -7,7 +7,7 @@ class Help:
     def show_help(root):
         help_dialog = tk.Toplevel(root)
         help_dialog.title('Help')
-        help_dialog.geometry('500x400')
+        help_dialog.geometry('500x600') # larg X alt
         help_dialog.transient(root)
         help_dialog.grab_set()
 
@@ -67,7 +67,7 @@ class Help:
         - Check the documentation for more information
         - Visit the project website for updates and news
         - GitHub Repository: https://github.com/Nsfr750/movie-catalog
-        - User Guide: https://github.com/Nsfr750/movie-catalog/wiki
+        - User Guide: https://github.com/Nsfr750/movie-catalog/docs/readme.md
         - Report Issues: https://github.com/Nsfr750/movie-catalog/issues
         '''
         
