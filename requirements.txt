@@ -1,5 +1,7 @@
 # Core Dependencies
 Pillow>=10.2.0  # Required for image handling
+tkinter>=8.6  # GUI framework
+mysql-connector-python>=8.2.0  # MySQL database connector
 
 # Development Dependencies
 black>=24.1.0  # Code formatter
@@ -19,6 +21,11 @@ pygments>=2.17.2  # Syntax highlighting
 # Optional Database Tools
 sqlalchemy>=2.0.25  # SQLAlchemy ORM
 alembic>=1.13.1  # Database migrations
+
+# Additional Dependencies
+csv>=1.0  # CSV file handling
+pathlib>=1.0.1  # Path manipulation
+re>=2.2.1  # Regular expressions
 
 # Optional Testing Tools
 pytest-cov>=4.1.0  # Coverage reporting
@@ -82,9 +89,11 @@ uvicorn>=0.27.0  # ASGI server
 jinja2>=3.1.2  # Template engine
 
 # Optional Database Drivers
-psycopg2-binary>=2.9.9  # PostgreSQL driver
-mysqlclient>=2.2.0  # MySQL driver
-pymongo>=4.6.1  # MongoDB driver
+mysql-connector-python>=8.2.0  # MySQL database driver
+sqlite3>=2.6.0  # SQLite database driver
+psycopg2-binary>=2.9.9  # PostgreSQL database driver
+pymongo>=4.5.0  # MongoDB database driver
+redis>=5.0.1  # Redis database driver
 
 # Optional API Clients
 requests>=2.31.0  # HTTP client
