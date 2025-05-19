@@ -1,8 +1,8 @@
 """
-Version management for Database Browser application.
+Version management for Movie Catalog application.
 
 This module provides a centralized version tracking system 
-for the Database Browser project.
+for the project.
 """
 
 # Version information follows Semantic Versioning 2.0.0 (https://semver.org/)
