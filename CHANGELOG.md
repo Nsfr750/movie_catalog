@@ -8,24 +8,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.6.0] - 2025-05-19
 ### Added
 - Tree view for displaying movies with genre, name, and path
-- Progress tracking during movie scanning
+- Progress tracking during scanning
 - Status bar showing current application state
 - Export to CSV functionality
 - Help and About dialogs
 - Sponsorship feature
 - Improved error handling and user feedback
+- MySQL database support with configuration dialog
+- Support for additional video file formats (.webm, .mpg, .mpeg, .wmv, .flv, .m4v, .vob, .divx)
 
 ### Changed
 - Improved database initialization and configuration
 - Enhanced movie scanning algorithm
 - Better GUI organization and component management
 - Fixed various bugs related to file handling and GUI updates
+- Updated help documentation with new features
 
 ### Fixed
 - Resolved CSV export issues
 - Fixed tree view update problems
 - Improved database connection handling
 - Fixed menu creation and command binding
+- Fixed syntax errors in file extension handling
+
+### Documentation
+- Updated help dialog with new features
+- Added MySQL configuration information
+- Updated supported file formats list
+- Added more detailed support information
 
 [1.6.0]: https://github.com/Nsfr750/movie_catalog/compare/v1.5.0...v1.6.0
 
