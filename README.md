@@ -46,15 +46,17 @@ A modern Python GUI application for managing and cataloging your movie collectio
 
 ## Installation
 
+### From Source
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/Nsfr750/movie_catalog.git
    cd movie_catalog
    ```
 
-2. Install dependencies:
+2. Install in development mode:
    ```bash
-   pip install -r requirements.txt
+   pip install -e .
    ```
 
 3. Configure MySQL database:
@@ -65,8 +67,33 @@ A modern Python GUI application for managing and cataloging your movie collectio
 
 4. Run the application:
    ```bash
-   python main.py
+   movie-catalog
    ```
+
+### From PyPI
+
+1. Install from PyPI:
+   ```bash
+   pip install movie-catalog
+   ```
+
+2. Run the application:
+   ```bash
+   movie-catalog
+   ```
+
+## Configuration
+
+The application uses MySQL as its database backend. You can configure the database settings through the GUI:
+
+1. Click "Database" in the menu
+2. Click "Configure Database"
+3. Enter your MySQL connection details:
+   - Host (default: localhost)
+   - Username (default: root)
+   - Password
+   - Database name (default: movie_catalog)
+4. Click "Save" to apply the configuration
 
 ## Usage
 
@@ -222,9 +249,33 @@ movies/
 
 ## Development
 
-For development purposes, you can install optional dependencies:
+For development, install the package with development dependencies:
+
 ```bash
-pip install -r requirements.txt
+pip install -e ".[dev]"
+```
+
+This will install all required dependencies for development, including:
+- Code formatting tools (black, isort)
+- Linters (flake8, pylint)
+- Type checking (mypy)
+- Testing tools (pytest, pytest-cov)
+- Documentation tools (sphinx)
+
+### Running Tests
+
+To run the test suite:
+
+```bash
+pytest tests/
+```
+
+### Building Documentation
+
+The documentation is located in the `docs/` directory and can be built using Sphinx:
+
+```bash
+sphinx-build -b html docs/ docs/_build/html
 ```
 
 ## Version History
