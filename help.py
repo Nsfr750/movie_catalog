@@ -29,15 +29,24 @@ class Help:
         - Movies will be displayed in the tree view
         
         2. Database Features:
-        - Movies are automatically saved to the database
+        - Movies are automatically saved to MySQL database
         - Click "Load from Database" to view stored movies
         - Use "Export to CSV" to save movies to a CSV file
+        - Database configuration can be modified in MySQLConfig
         
         3. File Organization:
         - Movies should be organized in genre directories
-        - Supported file extensions: .mp4, .mkv, .avi, .mov
+        - Supported file extensions: .mp4, .mkv, .avi, .mov, .webm, .mpg, .mpeg, .wmv, .flv, .m4v, .vob, .divx
         - Genre is extracted from directory names
         - Movie name is extracted from filenames
+        - Progress is shown during scanning
+        - Status updates are displayed in the status bar
+        
+        4. Additional Features:
+        - Help dialog provides detailed usage information
+        - About dialog shows application information
+        - Sponsorship options available
+        - Improved error handling and user feedback
         '''
         
         usage_label = ttk.Label(usage_frame, text=usage_text, justify='left')
@@ -49,6 +58,14 @@ class Help:
         
         docs_text = '''
         Documentation Links:
+        - GitHub Repository: https://github.com/Nsfr750/movie_catalog
+        - Project Documentation: https://nsfr750.github.io/movie_catalog
+        - Issue Tracker: https://github.com/Nsfr750/movie_catalog/issues
+        
+        5. Support:
+        - For support, please open an issue in GitHub
+        - Check the documentation for more information
+        - Visit the project website for updates and news
         - GitHub Repository: https://github.com/Nsfr750/movie-catalog
         - User Guide: https://github.com/Nsfr750/movie-catalog/wiki
         - Report Issues: https://github.com/Nsfr750/movie-catalog/issues
