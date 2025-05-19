@@ -12,6 +12,24 @@ Welcome to the official documentation for Movie Catalog. This documentation prov
 - [FAQ](faq.md)
 - [Troubleshooting](troubleshooting.md)
 
+## Package Information
+
+The Movie Catalog application is available as a Python package:
+
+- Package Name: `movie-catalog`
+- PyPI: https://pypi.org/project/movie-catalog/
+- GitHub: https://github.com/Nsfr750/movie_catalog
+
+## Building the Documentation
+
+The documentation is built using Sphinx. To build the HTML documentation:
+
+```bash
+sphinx-build -b html docs/ docs/_build/html
+```
+
+The built documentation will be available in the `docs/_build/html` directory.
+
 ## Contact
 
 For support or to report issues, please use the [GitHub Issues](https://github.com/Nsfr750/movie_catalog/issues) page.
