@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved error handling and user feedback
 - MySQL database support with configuration dialog
 - Support for additional video file formats (.webm, .mpg, .mpeg, .wmv, .flv, .m4v, .vob, .divx)
+- Package configuration with setup.py
+- Command line interface support
+- Development environment setup
 
 ### Changed
 - Improved database initialization and configuration
@@ -23,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Better GUI organization and component management
 - Fixed various bugs related to file handling and GUI updates
 - Updated help documentation with new features
+- Updated installation instructions
 
 ### Fixed
 - Resolved CSV export issues
@@ -36,8 +40,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added MySQL configuration information
 - Updated supported file formats list
 - Added more detailed support information
+- Added development environment setup guide
+
+### Package
+- Added setup.py for package distribution
+- Added PyPI installation support
+- Added development dependencies
+- Added package entry point
+- Added package data configuration
 
 [1.6.0]: https://github.com/Nsfr750/movie_catalog/compare/v1.5.0...v1.6.0
+
+## [1.5.0] - 2025-05-19
+### Added
+- Initial version with basic movie catalog functionality
+- SQLite database support
+- Basic GUI implementation
+- File scanning capability
+- Basic error handling
+
+### Changed
+- Initial project structure
+- Basic configuration system
+- Initial documentation
+
+### Fixed
+- Initial bug fixes
+
+[1.5.0]: https://github.com/Nsfr750/movie_catalog/compare/v1.4.0...v1.5.0
 
 ## [1.5.0] - 2025-05-19
 ### Added
