@@ -7,7 +7,7 @@ class About:
     def show_about(root):
         about_dialog = tk.Toplevel(root)
         about_dialog.title('About Movie Catalog')
-        about_dialog.geometry('600x400')
+        about_dialog.geometry('500x300') # larg X alt
         about_dialog.transient(root)
         about_dialog.grab_set()
 
