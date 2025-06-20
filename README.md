@@ -12,6 +12,7 @@ A modern Python GUI application for managing and cataloging your movie collectio
 - **Multilingual Support**: Switch between English and Italian at runtime.
 - **Data Export**: Export your movie catalog to a CSV file.
 - **Modular Structure**: Code is organized into a `struttura` package for better maintainability.
+- **Sponsor Support**: Support the project through various platforms directly from the application.
 
 ## Project Structure
 
@@ -34,7 +35,8 @@ movie_catalog/
 ├── requirements.txt    # Project dependencies
 ├── README.md           # This file
 ├── CHANGELOG.md        # Project version history
-└── TO_DO.md            # Development to-do list
+├── TO_DO.md            # Development to-do list
+└── mysql_config.json   # MySQL configuration file
 ```
 
 ## Setup and Installation
@@ -51,27 +53,47 @@ movie_catalog/
     pip install -r requirements.txt
     ```
 
-3.  **Configure the Database:**
-    On the first run, the application will prompt you to configure the MySQL database connection details (host, user, password, database name).
+3.  **Configure Database:**
+    - Make sure MySQL Server is installed and running
+    - Run the application and use the Database menu to configure your MySQL connection
+
+4.  **Run the application:**
+    ```sh
+    python main.py
+    ```
 
 ## Usage
 
-Run the main application file from the project's root directory:
+1. **Add Movies:**
+   - Click 'Browse' to select a directory containing your movies
+   - Click 'Scan for Movies' to add them to your catalog
 
-```sh
-python main.py
-```
+2. **View Movies:**
+   - Your movies will be displayed in the main window
+   - Use the 'Load Database' button to refresh the view
 
-- Use the **Browse** button to select the root directory of your movie collection.
-- Click **Scan Movies** to populate the catalog.
-- Use the **File** menu for database operations and to exit the application.
-- Use the **Language** menu to switch between English and Italian.
-- Use the **Help** menu for more information.
+3. **Export Data:**
+   - Click 'Export to CSV' to save your movie catalog to a file
+
+4. **Change Language:**
+   - Use the Language menu to switch between English and Italian
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a pull request or open an issue.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the GPL-3.0 License.
+This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+If you find this project useful, please consider supporting it through:
+- [GitHub Sponsors](https://github.com/sponsors/Nsfr750)
+- [Buy Me a Coffee](https://paypal.me/3dmega)
+- [Patreon](https://www.patreon.com/Nsfr750)
+- [Discord](https://discord.gg/BvvkUEP9)
+
+## Version History
+
+See [CHANGELOG.md](CHANGELOG.md) for a complete version history.

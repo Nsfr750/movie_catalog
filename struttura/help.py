@@ -1,14 +1,19 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import webbrowser
+from lang.lang import get_string as tr
+import sys
+import os
 
+
+# Help Class
 class Help:
     def __init__(self, root):
         self.root = root
 
     def show(self):
         help_dialog = tk.Toplevel(self.root)
-        help_dialog.title('Help')
+        help_dialog.title(tr('Help'))
         help_dialog.geometry('500x600') # larg X alt
         help_dialog.transient(self.root)
         help_dialog.grab_set()
@@ -19,36 +24,36 @@ class Help:
 
         # Usage Tab
         usage_frame = ttk.Frame(notebook)
-        notebook.add(usage_frame, text='Usage')
+        notebook.add(usage_frame, text=tr('Usage'))
         
-        usage_text = '''
-        Movie Catalog Help
+        usage_text = f'''
+        {tr('movie_catalog_help')}
         
-        1. Basic Usage:
-        - Click "Browse" to select your movie directory
-        - Click "Scan Movies" to start scanning
-        - Progress will be shown in the progress bar
-        - Movies will be displayed in the tree view
+        {tr('basic_usage')}:
+        - {tr('click_browse')}
+        - {tr('click_scan')}
+        - {tr('progress_shown')}
+        - {tr('movies_displayed')}
         
-        2. Database Features:
-        - Movies are automatically saved to MySQL database
-        - Click "Load from Database" to view stored movies
-        - Use "Export to CSV" to save movies to a CSV file
-        - Database configuration can be modified in MySQLConfig
+        {tr('database_features')}:
+        - {tr('auto_save_db')}
+        - {tr('load_from_db')}
+        - {tr('export_csv')}
+        - {tr('db_config')}
         
-        3. File Organization:
-        - Movies should be organized in genre directories
-        - Supported file extensions: .mp4, .mkv, .avi, .mov, .webm, .mpg, .mpeg, .wmv, .flv, .m4v, .vob, .divx
-        - Genre is extracted from directory names
-        - Movie name is extracted from filenames
-        - Progress is shown during scanning
-        - Status updates are displayed in the status bar
+        {tr('file_organization')}:
+        - {tr('genre_directories')}
+        - {tr('supported_formats')}
+        - {tr('genre_extraction')}
+        - {tr('name_extraction')}
+        - {tr('progress_shown')}
+        - {tr('status_updates')}
         
-        4. Additional Features:
-        - Help dialog provides detailed usage information
-        - About dialog shows application information
-        - Sponsorship options available
-        - Improved error handling and user feedback
+        {tr('additional_features')}:
+        - {tr('help_dialog')}
+        - {tr('about_dialog')}
+        - {tr('sponsor_options')}
+        - {tr('error_handling')}
         '''
         
         usage_label = ttk.Label(usage_frame, text=usage_text, justify='left')
@@ -56,21 +61,21 @@ class Help:
 
         # Documentation Tab
         docs_frame = ttk.Frame(notebook)
-        notebook.add(docs_frame, text='Documentation')
+        notebook.add(docs_frame, text=tr('Documentation'))
         
-        docs_text = '''
-        Documentation Links:
-        - GitHub Repository: https://github.com/Nsfr750/movie_catalog
-        - Project Documentation: https://nsfr750.github.io/movie_catalog
-        - Issue Tracker: https://github.com/Nsfr750/movie_catalog/issues
+        docs_text = f'''
+        {tr('documentation_links')}:
+        - {tr('github_repo')}: https://github.com/Nsfr750/movie_catalog
+        - {tr('project_docs')}: https://nsfr750.github.io/movie_catalog
+        - {tr('issue_tracker')}: https://github.com/Nsfr750/movie_catalog/issues
         
-        5. Support:
-        - For support, please open an issue in GitHub
-        - Check the documentation for more information
-        - Visit the project website for updates and news
-        - GitHub Repository: https://github.com/Nsfr750/movie-catalog
-        - User Guide: https://github.com/Nsfr750/movie-catalog/docs/readme.md
-        - Report Issues: https://github.com/Nsfr750/movie-catalog/issues
+        {tr('support')}:
+        - {tr('github_issue')}
+        - {tr('check_docs')}
+        - {tr('visit_website')}
+        - {tr('github_repo')}: https://github.com/Nsfr750/movie-catalog
+        - {tr('user_guide')}: https://github.com/Nsfr750/movie-catalog/docs/readme.md
+        - {tr('report_issues')}: https://github.com/Nsfr750/movie-catalog/issues
         '''
         
         docs_label = ttk.Label(docs_frame, text=docs_text, justify='left')
@@ -78,18 +83,18 @@ class Help:
 
         # Support Tab
         support_frame = ttk.Frame(notebook)
-        notebook.add(support_frame, text='Support')
+        notebook.add(support_frame, text=tr('Support'))
         
-        support_text = '''
-        Support Options:
-        - Email: nsfr750@yandex.com
-        - GitHub Issues: https://github.com/Nsfr750/movie-catalog/issues
-        - Discord: https://discord.gg/BvvkUEP9
+        support_text = f'''
+        {tr('support_options')}:
+        - {tr('email')}: nsfr750@yandex.com
+        - {tr('github_issues')}: https://github.com/Nsfr750/movie-catalog/issues
+        - {tr('discord')}: https://discord.gg/BvvkUEP9
         '''
         
         support_label = ttk.Label(support_frame, text=support_text, justify='left')
         support_label.pack(padx=5, pady=5)
 
         # Add a close button
-        close_btn = ttk.Button(help_dialog, text='Close', command=help_dialog.destroy)
+        close_btn = ttk.Button(help_dialog, text=tr('close'), command=help_dialog.destroy)
         close_btn.pack(pady=5)

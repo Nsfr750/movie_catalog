@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file. The format 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Fixed sponsor dialog close button functionality
+- Resolved duplicate tree view creation issue
+- Fixed language switching for all UI elements
+- Improved error handling in database operations
 
 ## [1.7.0] - 2025-06-20
 ### Added
@@ -11,17 +16,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Language Menu**: New menu for selecting the application language at runtime.
 - **`struttura` Package**: Created a new package to house core application logic.
 - **`requirements.txt`**: Added a file to manage project dependencies.
+- **Sponsor Dialog**: Added support for project sponsorship through various platforms.
+- **Improved Error Handling**: Better error messages and recovery mechanisms.
 
 ### Changed
 - **Project Structure**: Refactored `db.py`, `version.py`, `about.py`, `help.py`, and `sponsor.py` into the `struttura` package.
 - **Menu Logic**: Moved all menu creation and management into a dedicated `AppMenu` class in `struttura/menu.py`.
 - **Dialogs as Classes**: Refactored `About`, `Help`, and `Sponsor` dialogs from static methods to classes.
 - **UI Updates**: All UI text now updates dynamically when the language is changed.
+- **Code Organization**: Improved code structure and documentation.
 
 ### Fixed
 - **`AttributeError` on Startup**: Fixed a regression where `main_frame` was not initialized correctly.
 - **`TypeError` in Dialogs**: Corrected the instantiation of `About`, `Help`, and `Sponsor` classes.
 - **Language Switch**: Fixed a bug where changing the language did not update the UI text.
+- **Window Management**: Improved handling of dialog windows and their parent-child relationships.
+- **Memory Leaks**: Fixed potential memory leaks in dialog handling.
 
 ## [1.6.0] - 2025-05-19
 ### Added
@@ -48,26 +58,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Resolved CSV export issues
-- Fixed tree view update problems
-- Improved database connection handling
-- Fixed menu creation and command binding
-- Fixed syntax errors in file extension handling
-
-### Documentation
-- Updated help dialog with new features
-- Added MySQL configuration information
-- Updated supported file formats list
-- Added more detailed support information
-- Added development environment setup guide
-
-### Package
-- Added setup.py for package distribution
-- Added PyPI installation support
-- Added development dependencies
-- Added package entry point
-- Added package data configuration
-
-[1.6.0]: https://github.com/Nsfr750/movie_catalog/compare/v1.5.0...v1.6.0
+- Fixed database connection handling
+- Improved error messages for file operations
+- Fixed window resizing issues
+- Addressed memory management in long-running operations
 
 ## [1.5.0] - 2025-05-19
 ### Added
@@ -84,8 +78,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Initial bug fixes
-
-[1.5.0]: https://github.com/Nsfr750/movie_catalog/compare/v1.4.0...v1.5.0
 
 ## [1.5.0] - 2025-05-19
 ### Added
@@ -105,9 +97,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Database creation permission issues
 - GUI component initialization order
 - Various UI layout issues
-
-[Unreleased]: https://github.com/Nsfr750/movie_catalog/compare/v1.5.0...HEAD
-[1.5.0]: https://github.com/Nsfr750/movie_catalog/compare/v1.4.0...v1.5.0
 
 ## [1.4.0] - 2025-05-19
 ### Added
@@ -176,3 +165,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Recursive directory scanning
 - File extension filtering (.mp4, .mkv, .avi, .mov)
 - Basic UI with progress tracking
+
+[Unreleased]: https://github.com/Nsfr750/movie_catalog/compare/v1.7.0...HEAD
+[1.7.0]: https://github.com/Nsfr750/movie_catalog/compare/v1.6.0...v1.7.0
+[1.6.0]: https://github.com/Nsfr750/movie_catalog/compare/v1.5.0...v1.6.0
+[1.5.0]: https://github.com/Nsfr750/movie_catalog/compare/v1.4.0...v1.5.0

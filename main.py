@@ -7,6 +7,7 @@ from lang import lang
 from struttura.version import get_version
 from struttura.menu import AppMenu
 from struttura import db
+from lang.lang import get_string as tr
 
 class Database:
     def __init__(self, root):
@@ -120,42 +121,70 @@ class MovieCatalogApp:
         self.set_language('en')
         
     def set_language(self, lang_code):
+        """Set the application language and update all UI texts."""
         lang.set_language(lang_code)
         self.update_ui_texts()
+        # Update menu texts if menu exists
+        if hasattr(self, 'menu') and hasattr(self.menu, 'update_menu_texts'):
+            self.menu.update_menu_texts()
 
     def update_ui_texts(self):
         """Update all UI texts to the current language."""
         self.root.title(f"{lang.get_string('app_title')} v{get_version()}")
-        self.dir_frame.config(text=lang.get_string('select_directory'))
-        self.browse_btn.config(text=lang.get_string('browse'))
-        self.actions_frame.config(text=lang.get_string('actions'))
-        self.scan_btn.config(text=lang.get_string('scan_movies'))
-        self.export_btn.config(text=lang.get_string('export_csv'))
-        self.load_btn.config(text=lang.get_string('load_from_db'))
-        self.tree.heading("Genre", text=lang.get_string('genre'))
-        self.tree.heading("Movie Name", text=lang.get_string('movie_name'))
-        self.tree.heading("Path", text=lang.get_string('path'))
+        
+        # Update directory frame
+        if hasattr(self, 'dir_frame'):
+            self.dir_frame.config(text=lang.get_string('select_directory'))
+        
+        # Update browse button
+        if hasattr(self, 'browse_btn'):
+            self.browse_btn.config(text=lang.get_string('browse'))
+        
+        # Update actions frame
+        if hasattr(self, 'actions_frame'):
+            self.actions_frame.config(text=lang.get_string('actions'))
+        
+        # Update action buttons
+        if hasattr(self, 'scan_btn'):
+            self.scan_btn.config(text=lang.get_string('scan_the_movies'))
+        if hasattr(self, 'export_btn'):
+            self.export_btn.config(text=lang.get_string('export_to_csv'))
+        if hasattr(self, 'load_btn'):
+            self.load_btn.config(text=lang.get_string('load_db'))
+        
+        # Update tree view headers
+        if hasattr(self, 'tree'):
+            self.tree.heading("Genre", text=lang.get_string('genre'))
+            self.tree.heading("Movie Name", text=lang.get_string('movie_name'))
+            self.tree.heading("Path", text=lang.get_string('path'))
+        
+        # Update status
+        if hasattr(self, 'status_label'):
+            self.status_label.config(text=lang.get_string('ready'))
 
     def load_movies_from_database(self):
         """Load movies from database into treeview"""
-        if not self.database or not self.database.db:
-            messagebox.showerror(lang.get_string('error'), lang.get_string('db_not_initialized'))
+        if not self.database:
+            messagebox.showwarning(lang.get_string('error'), lang.get_string('db_not_initialized'))
             return
             
-        movies = self.database.get_all_movies()
-        if not movies:
-            messagebox.showinfo(lang.get_string('info'), lang.get_string('no_movies_found'))
-            return
+        try:
+            movies = self.database.get_all_movies()
+            if not self.tree:
+                self._create_tree_view()
             
-        # Clear existing items
-        if self.tree:
+            # Clear existing items
             for item in self.tree.get_children():
                 self.tree.delete(item)
-        
-        # Insert movies
-        for genre, movie_name, path in movies:
-            self.tree.insert("", "end", values=(genre, movie_name, path))
-    
+            
+            # Insert movies
+            for movie in movies:
+                self.tree.insert("", "end", values=movie)
+                
+            messagebox.showinfo(lang.get_string('success'), lang.get_string('movies_loaded'))
+        except Exception as e:
+            messagebox.showerror(lang.get_string('error'), f"{lang.get_string('load_movies_failed')}: {str(e)}")
+
     def _new_database(self):
         """Create a new database"""
         if self.database.initialize():
@@ -212,9 +241,9 @@ class MovieCatalogApp:
         self.actions_frame.pack(fill='x', padx=10, pady=5)
         
         # Create buttons
-        self.scan_btn = ttk.Button(self.actions_frame, text=lang.get_string('scan_movies'), command=self.start_scan)
-        self.export_btn = ttk.Button(self.actions_frame, text=lang.get_string('export_csv'), command=self.export_to_csv)
-        self.load_btn = ttk.Button(self.actions_frame, text=lang.get_string('load_from_db'), command=self.load_from_database)
+        self.scan_btn = ttk.Button(self.actions_frame, text=tr('scan_the_movies'), command=self.start_scan)
+        self.export_btn = ttk.Button(self.actions_frame, text=tr('export_to_csv'), command=self.export_to_csv)
+        self.load_btn = ttk.Button(self.actions_frame, text=tr('load_db'), command=self.load_from_database)
         
         # Grid buttons
         self.scan_btn.pack(side='left', padx=5, pady=5)
