@@ -1,0 +1,299 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer Guide &mdash; Movie Catalog 1.7.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=908dc885"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Reference" href="../api_reference/index.html" />
+    <link rel="prev" title="User Guide" href="../user_guide/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #2980B9" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Movie Catalog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developer Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#project-structure">Project Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#development-setup">Development Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-up-the-development-environment">Setting Up the Development Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#coding-standards">Coding Standards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#building-the-documentation">Building the Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#documentation-guidelines">Documentation Guidelines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#api-reference">API Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deployment">Deployment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#building-distributions">Building Distributions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#publishing-to-pypi">Publishing to PyPI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#versioning">Versioning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#changelog">Changelog</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_reference/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to Movie Catalog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Welcome to Movie Catalog’s documentation!</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #2980B9" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Movie Catalog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Developer Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developer_guide/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="developer-guide">
+<span id="id1"></span><h1>Developer Guide<a class="headerlink" href="#developer-guide" title="Link to this heading"></a></h1>
+<p>This guide is intended for developers who want to contribute to Movie Catalog or extend its functionality.</p>
+<div class="toctree-wrapper compound">
+</div>
+<section id="project-structure">
+<h2>Project Structure<a class="headerlink" href="#project-structure" title="Link to this heading"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>movie_catalog/
+├── docs/               # Documentation files
+├── lang/               # Language files
+│   └── lang.py        # Language handling
+├── logs/              # Application logs
+├── struttura/         # Main package
+│   ├── __init__.py    # Package initialization
+│   ├── config.py      # Configuration management
+│   ├── db.py          # Database operations
+│   ├── movie_metadata.py  # TMDB integration
+│   └── ...            # Other modules
+├── main.py            # Application entry point
+└── tests/             # Test files
+</pre></div>
+</div>
+</section>
+<section id="development-setup">
+<h2>Development Setup<a class="headerlink" href="#development-setup" title="Link to this heading"></a></h2>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Python 3.8+</p></li>
+<li><p>MySQL Server</p></li>
+<li><p>Git</p></li>
+<li><p>Poetry (for dependency management)</p></li>
+</ul>
+</section>
+<section id="setting-up-the-development-environment">
+<h3>Setting Up the Development Environment<a class="headerlink" href="#setting-up-the-development-environment" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Fork and clone the repository:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>git clone <a class="reference external" href="https://github.com/Nsfr750/movie_catalog.git">https://github.com/Nsfr750/movie_catalog.git</a>
+cd movie_catalog</p>
+</div></blockquote>
+</li>
+<li><p>Install dependencies:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>pip install -r requirements-dev.txt
+pip install -e .</p>
+</div></blockquote>
+</li>
+<li><p>Set up pre-commit hooks:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>pre-commit install</p>
+</div></blockquote>
+</li>
+</ol>
+</section>
+</section>
+<section id="coding-standards">
+<h2>Coding Standards<a class="headerlink" href="#coding-standards" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Follow PEP 8 style guide</p></li>
+<li><p>Use type hints for all function signatures</p></li>
+<li><p>Write docstrings for all public functions and classes</p></li>
+<li><p>Keep functions small and focused</p></li>
+<li><p>Write unit tests for new features</p></li>
+</ul>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
+<p>Run the test suite:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>tests/
+</pre></div>
+</div>
+<p>Run with coverage:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>--cov<span class="o">=</span>src<span class="w"> </span>tests/
+</pre></div>
+</div>
+</section>
+<section id="documentation">
+<h2>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h2>
+<section id="building-the-documentation">
+<h3>Building the Documentation<a class="headerlink" href="#building-the-documentation" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Install documentation dependencies:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>pip install -r docs/requirements.txt</p>
+</div></blockquote>
+</li>
+<li><p>Build the documentation:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>cd docs
+make html</p>
+</div></blockquote>
+</li>
+<li><p>Open <cite>_build/html/index.html</cite> in your browser</p></li>
+</ol>
+</section>
+<section id="documentation-guidelines">
+<h3>Documentation Guidelines<a class="headerlink" href="#documentation-guidelines" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Keep documentation up-to-date with code changes</p></li>
+<li><p>Use reStructuredText format for all documentation</p></li>
+<li><p>Include examples for complex functionality</p></li>
+<li><p>Document all public APIs</p></li>
+</ul>
+</section>
+</section>
+<section id="api-reference">
+<h2>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h2>
+</section>
+<section id="deployment">
+<h2>Deployment<a class="headerlink" href="#deployment" title="Link to this heading"></a></h2>
+<section id="building-distributions">
+<h3>Building Distributions<a class="headerlink" href="#building-distributions" title="Link to this heading"></a></h3>
+<p>Build a source distribution and wheel:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>setup.py<span class="w"> </span>sdist<span class="w"> </span>bdist_wheel
+</pre></div>
+</div>
+</section>
+<section id="publishing-to-pypi">
+<h3>Publishing to PyPI<a class="headerlink" href="#publishing-to-pypi" title="Link to this heading"></a></h3>
+<ol class="arabic">
+<li><p>Install Twine:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>pip install twine</p>
+</div></blockquote>
+</li>
+<li><p>Upload to TestPyPI:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>twine upload –repository testpypi dist/*</p>
+</div></blockquote>
+</li>
+<li><p>Upload to PyPI:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>twine upload dist/*</p>
+</div></blockquote>
+</li>
+</ol>
+</section>
+</section>
+<section id="versioning">
+<h2>Versioning<a class="headerlink" href="#versioning" title="Link to this heading"></a></h2>
+<p>Movie Catalog follows <a class="reference external" href="https://semver.org/">Semantic Versioning</a>.</p>
+<ul class="simple">
+<li><p><strong>MAJOR</strong> version for incompatible API changes</p></li>
+<li><p><strong>MINOR</strong> version for added functionality in a backward-compatible manner</p></li>
+<li><p><strong>PATCH</strong> version for backward-compatible bug fixes</p></li>
+</ul>
+</section>
+<section id="changelog">
+<h2>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h2>
+<p>See the <a class="reference internal" href="../changelog.html"><span class="doc">CHANGELOG</span></a> for a history of changes to the project.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../user_guide/index.html" class="btn btn-neutral float-left" title="User Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../api_reference/index.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Nsfr750.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
