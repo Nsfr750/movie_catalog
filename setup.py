@@ -8,7 +8,7 @@ setup(
     name="movie-catalog",
     version=version.get_version(),
     author="Nsfr750",
-    author_email="",
+    author_email="nsfr750@yandex.com",
     description="A Python application for managing your movie collection",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -19,7 +19,7 @@ setup(
     },
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: GPL3 License",
         "Operating System :: OS Independent",
         "Development Status :: 4 - Beta",
         "Intended Audience :: End Users/Desktop",
@@ -61,5 +61,5 @@ setup(
     },
     include_package_data=True,
     keywords=["movie", "catalog", "database", "MySQL", "media management"],
-    license="MIT"
+    license="GPL3"
 )
