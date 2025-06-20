@@ -4,11 +4,51 @@ All notable changes to this project will be documented in this file. The format 
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- **Update System**: Added automatic update checking with GitHub integration
+- **Settings Dialog**: New tabbed settings dialog for application configuration
+- **Logging System**: Comprehensive logging with log viewer interface
+- **Configuration Management**: Persistent application settings storage
+
 ### Fixed
 - Fixed sponsor dialog close button functionality
 - Resolved duplicate tree view creation issue
 - Fixed language switching for all UI elements
 - Improved error handling in database operations
+- Fixed circular import issues in package structure
+
+## [1.7.1] - 2025-06-20
+### Added
+- **Update System**: Automatic version checking and update notifications
+- **Settings Dialog**: User-configurable application settings
+  - Theme selection (Light/Dark/System)
+  - Language selection (English/Italian)
+  - Logging configuration
+  - Update preferences
+- **Logging System**:
+  - Configurable log levels
+  - Log file rotation
+  - Built-in log viewer
+- **Configuration Management**:
+  - JSON-based configuration
+  - Persistent settings between sessions
+  - Default value handling
+
+### Changed
+- **Project Structure**:
+  - Moved version information to `__init__.py`
+  - Improved module organization
+  - Better separation of concerns
+- **Code Quality**:
+  - Added type hints
+  - Improved error handling
+  - Better code documentation
+
+### Fixed
+- Fixed various UI glitches
+- Resolved import issues
+- Improved error messages
+- Fixed configuration loading/saving
 
 ## [1.7.0] - 2025-06-20
 ### Added
@@ -166,7 +206,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - File extension filtering (.mp4, .mkv, .avi, .mov)
 - Basic UI with progress tracking
 
-[Unreleased]: https://github.com/Nsfr750/movie_catalog/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/Nsfr750/movie_catalog/compare/v1.7.1...HEAD
+[1.7.1]: https://github.com/Nsfr750/movie_catalog/compare/v1.7.0...v1.7.1
 [1.7.0]: https://github.com/Nsfr750/movie_catalog/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/Nsfr750/movie_catalog/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/Nsfr750/movie_catalog/compare/v1.4.0...v1.5.0

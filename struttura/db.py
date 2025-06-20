@@ -71,7 +71,7 @@ class MySQLConfig:
                 
         config_window = tk.Toplevel()
         config_window.title("MySQL Configuration")
-        config_window.geometry("400x300")
+        config_window.geometry("400x400")
         
         # Create form elements
         ttk.Label(config_window, text="Host:").pack(pady=5)

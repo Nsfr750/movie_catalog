@@ -4,6 +4,7 @@ from lang.lang import get_string, set_language
 from struttura.about import About
 from struttura.help import Help
 from struttura.sponsor import Sponsor
+from struttura.log_viewer import LogViewer
 
 class AppMenu:
     def __init__(self, app):
@@ -33,6 +34,23 @@ class AppMenu:
         self.lang_menu.add_command(label="English", command=lambda: self.app.set_language('en'))
         self.lang_menu.add_command(label="Italiano", command=lambda: self.app.set_language('it'))
 
+        # Tools menu
+        self.tools_menu = Menu(self.menubar, tearoff=0)
+        self.menubar.add_cascade(label=get_string('tools'), menu=self.tools_menu)
+        self.tools_menu.add_command(
+            label=get_string('options'),
+            command=self.app.show_options
+        )
+        self.tools_menu.add_command(
+            label=get_string('log_viewer'),
+            command=self.show_log_viewer
+        )
+        self.tools_menu.add_separator()
+        self.tools_menu.add_command(
+            label=get_string('check_for_updates'),
+            command=self.app.check_for_updates
+        )
+
         # Help menu
         self.create_help_menu()
 
@@ -55,6 +73,10 @@ class AppMenu:
     def show_sponsor(self):
         """Show the Sponsor dialog."""
         self.sponsor_dialog.show_sponsor()
+
+    def show_log_viewer(self):
+        """Show the log viewer window."""
+        LogViewer(self.root)
 
     def update_menu_text(self):
         """Update all menu texts."""

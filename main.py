@@ -1,13 +1,17 @@
 import os
+import sys
+from pathlib import Path
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import threading
 import queue
 from lang import lang
-from struttura.version import get_version
+__version__ = "1.7.1"  # Keep this in sync with struttura/__init__.py
 from struttura.menu import AppMenu
 from struttura import db
 from lang.lang import get_string as tr
+from struttura import logger
+from struttura.traceback import setup_exception_handling
 
 class Database:
     def __init__(self, root):
@@ -95,9 +99,16 @@ class MovieScanner:
 
 class MovieCatalogApp:
     def __init__(self, root):
+        """Initialize the application."""
         self.root = root
-        self.root.title(f"{lang.get_string('app_title')} v{get_version()}")
+        self.root.title(f"{lang.get_string('app_title')} v{__version__}")
         self.root.geometry("1000x600")
+        
+        # Set up logging and exception handling
+        self._setup_logging()
+        
+        # Configure styles
+        self._configure_styles()
         
         # Initialize components
         self.result_queue = queue.Queue()
@@ -120,6 +131,20 @@ class MovieCatalogApp:
         self.update_status(lang.get_string('ready'))
         self.set_language('en')
         
+    def _setup_logging(self):
+        """Set up logging and exception handling."""
+        # Configure the root logger
+        logger.logger.info("Starting Movie Catalog")
+        
+        # Set up global exception handling
+        setup_exception_handling()
+        
+        # Log system information
+        import platform
+        logger.logger.info(f"Python version: {platform.python_version()}")
+        logger.logger.info(f"System: {platform.system()} {platform.release()}")
+        logger.logger.info(f"Working directory: {os.getcwd()}")
+    
     def set_language(self, lang_code):
         """Set the application language and update all UI texts."""
         lang.set_language(lang_code)
@@ -130,7 +155,7 @@ class MovieCatalogApp:
 
     def update_ui_texts(self):
         """Update all UI texts to the current language."""
-        self.root.title(f"{lang.get_string('app_title')} v{get_version()}")
+        self.root.title(f"{lang.get_string('app_title')} v{__version__}")
         
         # Update directory frame
         if hasattr(self, 'dir_frame'):
@@ -173,18 +198,25 @@ class MovieCatalogApp:
             if not self.tree:
                 self._create_tree_view()
             
-            # Clear existing items
+            # Clear existing items and store all movies
+            self.all_movies = []
             for item in self.tree.get_children():
                 self.tree.delete(item)
             
-            # Insert movies
+            # Insert movies and store them for filtering
             for movie in movies:
-                self.tree.insert("", "end", values=movie)
+                # Store movie with unique ID based on path
+                movie_with_id = (movie[0],) + movie  # Keep original ID and add to values
+                self.all_movies.append(movie_with_id)
+                
+                # Insert into tree with unique ID based on genre and name
+                item_id = f"{movie[0]}_{movie[1]}"  # Using genre and movie name for ID
+                self.tree.insert("", "end", values=movie, iid=item_id)
                 
             messagebox.showinfo(lang.get_string('success'), lang.get_string('movies_loaded'))
         except Exception as e:
             messagebox.showerror(lang.get_string('error'), f"{lang.get_string('load_movies_failed')}: {str(e)}")
-
+            
     def _new_database(self):
         """Create a new database"""
         if self.database.initialize():
@@ -214,6 +246,9 @@ class MovieCatalogApp:
         
         # Actions frame
         self._create_actions_frame()
+        
+        # Search frame
+        self._create_search_frame()
         
         # Progress bar
         self._create_progress_bar()
@@ -303,6 +338,108 @@ class MovieCatalogApp:
         
         self.status_label = ttk.Label(self.status_frame, text=lang.get_string('ready'), anchor=tk.W)
         self.status_label.pack(fill='x', padx=5, pady=5)
+
+    def _create_search_frame(self):
+        """Create search frame with search box and button"""
+        self.search_frame = ttk.Frame(self.main_frame)
+        self.search_frame.pack(fill='x', padx=10, pady=(5, 0))
+        
+        # Search label
+        ttk.Label(self.search_frame, text=tr('search') + ':').pack(side='left', padx=(0, 5))
+        
+        # Search entry with placeholder
+        self.search_var = tk.StringVar()
+        self.search_entry = ttk.Entry(
+            self.search_frame, 
+            textvariable=self.search_var, 
+            width=40,
+            style='Search.TEntry'
+        )
+        self.search_entry.pack(side='left', fill='x', expand=True)
+        self.search_entry.bind('<KeyRelease>', self._on_search_change)
+        self.search_entry.bind('<FocusIn>', self._on_search_focus_in)
+        self.search_entry.bind('<FocusOut>', self._on_search_focus_out)
+        
+        # Set initial placeholder
+        self._show_placeholder()
+        
+        # Clear button
+        self.clear_btn = ttk.Button(
+            self.search_frame, 
+            text=tr('clear'), 
+            command=self._clear_search,
+            width=8
+        )
+        self.clear_btn.pack(side='left', padx=(5, 0))
+        
+        # Initialize movies list
+        if not hasattr(self, 'all_movies'):
+            self.all_movies = []
+        
+    def _show_placeholder(self):
+        """Show placeholder text in search box"""
+        if not self.search_var.get():
+            self.search_entry.insert(0, tr('search_placeholder'))
+            self.search_entry.config(foreground='grey')
+    
+    def _hide_placeholder(self):
+        """Hide placeholder text"""
+        if self.search_var.get() == tr('search_placeholder'):
+            self.search_entry.delete(0, tk.END)
+            self.search_entry.config(foreground='black')
+    
+    def _on_search_focus_in(self, event):
+        """Handle focus in event for search box"""
+        if self.search_var.get() == tr('search_placeholder'):
+            self._hide_placeholder()
+    
+    def _on_search_focus_out(self, event):
+        """Handle focus out event for search box"""
+        if not self.search_var.get():
+            self._show_placeholder()
+
+    def _on_search_change(self, event=None):
+        """Handle search text changes"""
+        # Skip if the change was due to placeholder text
+        if hasattr(self, 'search_var') and self.search_var.get() == tr('search_placeholder'):
+            return
+            
+        search_term = self.search_var.get().lower() if hasattr(self, 'search_var') else ''
+        
+        # Clear current selection
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+        
+        # If search is empty, show all movies
+        if not search_term:
+            for movie in self.all_movies:
+                # Use a unique ID based on the movie's path to avoid duplicates
+                item_id = f"{movie[1]}_{movie[2]}"  # Using genre and movie name for ID
+                self.tree.insert('', 'end', values=movie[1:], iid=item_id)
+            return
+        
+        # Filter movies based on search term
+        found = False
+        for movie in self.all_movies:
+            # Check if any field contains the search term
+            if any(search_term in str(field).lower() for field in movie[1:]):
+                item_id = f"{movie[1]}_{movie[2]}"  # Using genre and movie name for ID
+                self.tree.insert('', 'end', values=movie[1:], iid=item_id)
+                found = True
+        
+        # Show message if no results found
+        if not found and search_term:
+            self.tree.insert('', 'end', values=['', tr('no_results'), ''], tags=('no_results',))
+            self.tree.tag_configure('no_results', foreground='gray', font=('TkDefaultFont', 9, 'italic'))
+
+    def _clear_search(self):
+        """Clear the search box and show all movies"""
+        if hasattr(self, 'search_var'):
+            self.search_var.set('')
+            self._on_search_change()
+            if hasattr(self, 'search_entry'):
+                self._show_placeholder()
+                self.search_entry.focus_set()
 
     def update_status(self, message):
         """Update the status bar message"""
@@ -518,17 +655,70 @@ class MovieCatalogApp:
             if not self.tree:
                 self._create_tree_view()
             
-            # Clear existing items
+            # Clear existing items and store all movies
+            self.all_movies = []
             for item in self.tree.get_children():
                 self.tree.delete(item)
             
-            # Insert movies
-            for movie in movies:
-                self.tree.insert("", "end", values=movie)
+            # Insert movies and store them for filtering
+            for i, movie in enumerate(movies):
+                self.all_movies.append((i,) + movie)  # Add unique ID for each movie
+                self.tree.insert("", "end", values=movie, iid=str(i))
                 
             messagebox.showinfo(lang.get_string('success'), lang.get_string('movies_loaded'))
         except Exception as e:
             messagebox.showerror(lang.get_string('error'), f"{lang.get_string('load_movies_failed')}: {str(e)}")
+
+    def _configure_styles(self):
+        """Configure ttk styles"""
+        style = ttk.Style()
+        
+        # Configure search entry style
+        style.configure('Search.TEntry',
+                       padding=5,
+                       relief='flat',
+                       foreground='grey')
+        
+        # Configure treeview style
+        style.configure('Treeview',
+                       rowheight=25,
+                       fieldbackground='white')
+        style.configure('Treeview.Heading',
+                       font=('TkDefaultFont', 10, 'bold'))
+        
+        # Configure button style
+        style.configure('TButton', padding=5)
+        
+        # Configure status bar style
+        style.configure('Status.TLabel',
+                       padding=(5, 2, 5, 2),
+                       background='#f0f0f0',
+                       relief='sunken',
+                       anchor='w')
+        
+        # Configure progress bar style
+        style.configure('TProgressbar',
+                       thickness=20,
+                       background='#4CAF50')
+
+    def show_options(self):
+        """Show the options/settings dialog."""
+        from struttura.options import OptionsDialog
+        OptionsDialog(self.root)
+        logger.logger.info("Options dialog opened")
+    
+    def check_for_updates(self):
+        """Check for application updates."""
+        from struttura.updates import check_for_updates
+        
+        try:
+            check_for_updates(self.root, __version__)
+        except Exception as e:
+            logger.logger.error(f"Error in update check: {str(e)}")
+            messagebox.showerror(
+                lang.get_string('error'),
+                f"{lang.get_string('error_checking_updates')}: {str(e)}"
+            )
 
 if __name__ == "__main__":
     root = tk.Tk()

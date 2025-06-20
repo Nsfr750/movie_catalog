@@ -14,17 +14,42 @@
 - [x] Fix sponsor dialog close functionality
 - [x] Resolve duplicate tree view creation
 - [x] Ensure all UI elements update on language change
+- [x] Implement automatic update checking
+- [x] Add settings configuration dialog
+- [x] Implement comprehensive logging system
+- [x] Add log viewer interface
+- [x] Fix circular import issues
+- [x] Improve error handling and user feedback
 - [x] Further testing of all application features
+- [x] Implement a search/filter feature for the movie list
 
 ## In Progress 
 
 - [ ] Comprehensive testing of all application features
 - [ ] Performance optimization for large movie collections
+- [ ] Persist user preferences between sessions
+- [ ] Add unit tests for new features
 
 ## Future Enhancements 
 
 - [ ] Add unit and integration tests
-- [ ] Persist the selected language choice between sessions
-- [ ] Implement a search/filter feature for the movie list
 - [ ] Add movie metadata (e.g., posters, ratings, synopsis) from an online API
 - [ ] Improve the visual design of the UI
+- [ ] Implement backup/restore functionality
+- [ ] Add keyboard shortcuts for common actions
+- [ ] Support for additional database backends (SQLite, PostgreSQL)
+- [ ] Add batch operations for movie management
+- [ ] Implement a plugin system for extending functionality
+
+## Known Issues
+
+- [ ] Some UI elements may need resizing for different screen resolutions
+- [ ] Error messages could be more user-friendly
+- [ ] Log rotation could be more configurable
+
+## Documentation
+
+- [ ] Add more detailed API documentation
+- [ ] Create a user guide
+- [ ] Add inline code documentation
+- [ ] Document the configuration file format

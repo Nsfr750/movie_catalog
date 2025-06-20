@@ -1,6 +1,6 @@
 # Movie Catalog
 
-**Version: 1.7.0**
+**Version: 1.7.1**
 
 A modern Python GUI application for managing and cataloging your movie collection, built with Tkinter and MySQL.
 
@@ -10,6 +10,9 @@ A modern Python GUI application for managing and cataloging your movie collectio
 - **Database Integration**: Store your movie collection in a MySQL database.
 - **Dynamic UI**: A clean and responsive user interface built with `tkinter.ttk`.
 - **Multilingual Support**: Switch between English and Italian at runtime.
+- **Automatic Updates**: Check for and install application updates.
+- **Configurable Settings**: Customize application behavior through a settings dialog.
+- **Logging**: Comprehensive logging system with configurable log levels.
 - **Data Export**: Export your movie catalog to a CSV file.
 - **Modular Structure**: Code is organized into a `struttura` package for better maintainability.
 - **Sponsor Support**: Support the project through various platforms directly from the application.
@@ -23,13 +26,18 @@ movie_catalog/
 ├── lang/
 │   ├── lang.py         # Handles language translations
 │   └── __init__.py
+├── logs/               # Application logs
+│   └── app.log
 ├── struttura/
 │   ├── about.py        # 'About' dialog class
+│   ├── config.py       # Configuration management
 │   ├── db.py           # Database connection and operations
 │   ├── help.py         # 'Help' dialog class
+│   ├── log_viewer.py   # Log viewing interface
 │   ├── menu.py         # Application menu class
+│   ├── options.py      # Settings dialog
 │   ├── sponsor.py      # 'Sponsor' dialog class
-│   ├── version.py      # Version management
+│   ├── updates.py      # Update checking functionality
 │   └── __init__.py     # Makes 'struttura' a package
 ├── main.py             # Main application entry point
 ├── requirements.txt    # Project dependencies
@@ -37,7 +45,6 @@ movie_catalog/
 ├── CHANGELOG.md        # Project version history
 ├── TO_DO.md            # Development to-do list
 └── mysql_config.json   # MySQL configuration file
-```
 
 ## Setup and Installation
 
