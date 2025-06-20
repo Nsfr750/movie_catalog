@@ -32,7 +32,7 @@ A modern Python GUI application for managing and cataloging your movie collectio
 
 - Python 3.8 or higher
 - MySQL Server
-- TMDB API key (for movie metadata)
+- TMDB API key (for movie metadata) - https://www.themoviedb.org/settings/api
 
 ### Installation
 
