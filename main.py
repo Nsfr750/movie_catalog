@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import threading
 import queue
+import json
 from lang import lang
 __version__ = "1.7.1"  # Keep this in sync with struttura/__init__.py
 from struttura.menu import AppMenu
@@ -12,23 +13,203 @@ from struttura import db
 from lang.lang import get_string as tr
 from struttura import logger
 from struttura.traceback import setup_exception_handling
+from struttura.movie_details_dialog import MovieDetailsDialog
+from struttura.movie_metadata import MovieMetadata
 
 class Database:
     def __init__(self, root):
         self.db = None
         self.root = root
+        self.connection = None
+        self.cursor = None
+        self.is_mysql = True  # We're using MySQL
         
     def initialize(self):
-        self.db = db.MySQLDatabase(self.root)
-        if not self.db.create_database():
-            return False
+        """Initialize the database connection"""
+        try:
+            self.db = db.MySQLDatabase(self.root)
             
-        # Create tables if they don't exist
-        if not self.db.create_tables():
-            return False
+            # Create database and get connection
+            self.connection = self.db.create_database()
+            if not self.connection:
+                return False
+                
+            # Create tables if they don't exist
+            if not self.db.create_tables():
+                return False
+                
+            # Get a cursor for executing queries
+            self.cursor = self.connection.cursor(dictionary=True)
+            return True
             
-        return True
+        except Exception as e:
+            print(f"Error initializing database: {e}")
+            return False
         
+    def close(self):
+        """Close the database connection"""
+        try:
+            if hasattr(self, 'cursor') and self.cursor:
+                self.cursor.close()
+            if hasattr(self, 'connection') and self.connection and self.connection.is_connected():
+                self.connection.close()
+            if hasattr(self, 'db') and self.db:
+                self.db.close()
+        except Exception as e:
+            print(f"Error closing database connection: {e}")
+            
+    def add_movie_with_metadata(self, title, year, path, poster_url, backdrop_url, overview,
+                            rating, runtime, director, cast, genres, imdb_id):
+        """
+        Add a movie with full metadata to the database.
+        
+        Args:
+            title (str): Movie title
+            year (int): Release year
+            path (str): Path to the movie file
+            poster_url (str): URL to the movie poster
+            backdrop_url (str): URL to the movie backdrop
+            overview (str): Movie plot summary
+            rating (float): Movie rating (0-10)
+            runtime (int): Movie duration in minutes
+            director (str): Movie director
+            cast (list): List of cast members
+            genres (list): List of genres
+            imdb_id (str): IMDB ID (optional)
+            
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            # Ensure we have a valid connection
+            if not self.connection or not self.connection.is_connected():
+                if not self.initialize():
+                    return False
+            
+            # Convert lists to JSON strings
+            cast_json = json.dumps(cast) if cast else '[]'
+            genres_json = json.dumps(genres) if genres else '[]'
+            
+            # Extract genre from path if not provided
+            genre = ''
+            if path:
+                path_parts = path.replace('\\', '/').split('/')
+                if len(path_parts) > 1:
+                    genre = path_parts[-2]  # Assuming genre is the parent directory
+            
+            # Check if the table has the new schema
+            self.cursor.execute("""
+                SELECT COLUMN_NAME 
+                FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'movies' 
+                AND COLUMN_NAME = 'title'
+            """)
+            has_new_schema = bool(self.cursor.fetchone())
+            
+            # Check if updated_at column exists
+            self.cursor.execute("""
+                SELECT COLUMN_NAME 
+                FROM INFORMATION_SCHEMA.COLUMNS 
+                WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'movies' 
+                AND COLUMN_NAME = 'updated_at'
+            """)
+            has_updated_at = bool(self.cursor.fetchone())
+            
+            if has_new_schema:
+                # Build the base query
+                columns = [
+                    'title', 'year', 'path', 'poster_url', 'backdrop_url', 'overview',
+                    'rating', 'runtime', 'director', 'cast_json', 'genres_json', 'imdb_id',
+                    'genre', 'movie_name'
+                ]
+                placeholders = ', '.join(['%s'] * len(columns))
+                
+                # Build the ON DUPLICATE KEY UPDATE part
+                update_columns = [
+                    'title = VALUES(title)',
+                    'year = VALUES(year)',
+                    'poster_url = VALUES(poster_url)',
+                    'backdrop_url = VALUES(backdrop_url)',
+                    'overview = VALUES(overview)',
+                    'rating = VALUES(rating)',
+                    'runtime = VALUES(runtime)',
+                    'director = VALUES(director)',
+                    'cast_json = VALUES(cast_json)',
+                    'genres_json = VALUES(genres_json)',
+                    'imdb_id = VALUES(imdb_id)',
+                    'genre = VALUES(genre)',
+                    'movie_name = VALUES(movie_name)'
+                ]
+                
+                # Add updated_at if the column exists
+                if has_updated_at:
+                    update_columns.append('updated_at = CURRENT_TIMESTAMP')
+                
+                query = f"""
+                    INSERT INTO movies 
+                    ({', '.join(columns)})
+                    VALUES ({placeholders})
+                    ON DUPLICATE KEY UPDATE
+                    {', '.join(update_columns)}
+                """
+                
+                params = (
+                    title, year, path, poster_url, backdrop_url, overview,
+                    rating, runtime, director, cast_json, genres_json, imdb_id,
+                    genre, title  # Using title as movie_name for backward compatibility
+                )
+            else:
+                # Fallback to old schema
+                query = """
+                    INSERT INTO movies 
+                    (genre, movie_name, path)
+                    VALUES (%s, %s, %s)
+                    ON DUPLICATE KEY UPDATE
+                    genre = VALUES(genre),
+                    movie_name = VALUES(movie_name),
+                    last_scanned = CURRENT_TIMESTAMP
+                """
+                params = (genre, title, path)
+            
+            self.cursor.execute(query, params)
+            self.connection.commit()
+            return True
+            
+        except Exception as e:
+            print(f"Error adding movie with metadata: {e}")
+            if self.connection and self.connection.is_connected():
+                self.connection.rollback()
+            return False
+
+    def add_movie_with_metadata_dialog(self):
+        """Open dialog to add a movie with metadata."""
+        def save_metadata(metadata):
+            # Save to database
+            movie_id = self.add_movie_with_metadata(
+                title=metadata['title'],
+                year=metadata['year'],
+                path="",  # You'll need to set this
+                poster_url=metadata['poster_url'],
+                backdrop_url=metadata['backdrop_url'],
+                overview=metadata['overview'],
+                rating=metadata['rating'],
+                runtime=metadata['runtime'],
+                director=metadata['director'],
+                cast=json.dumps(metadata['cast']),
+                genres=json.dumps(metadata['genres']),
+                imdb_id=metadata['imdb_id']
+            )
+            if movie_id:
+                self.refresh_movie_list()
+        
+        dialog = MovieDetailsDialog(
+            self.root,
+            title="New Movie",
+            on_save=save_metadata
+        )
+        dialog.transient(self.root)
+        dialog.grab_set()
+
     def add_movie(self, genre, movie_name, path):
         if self.db:
             return self.db.add_movie(genre, movie_name, path)
@@ -275,15 +456,46 @@ class MovieCatalogApp:
         self.actions_frame = ttk.LabelFrame(self.main_frame, text=lang.get_string('actions'))
         self.actions_frame.pack(fill='x', padx=10, pady=5)
         
-        # Create buttons
-        self.scan_btn = ttk.Button(self.actions_frame, text=tr('scan_the_movies'), command=self.start_scan)
-        self.export_btn = ttk.Button(self.actions_frame, text=tr('export_to_csv'), command=self.export_to_csv)
-        self.load_btn = ttk.Button(self.actions_frame, text=tr('load_db'), command=self.load_from_database)
+        # Add Movie button
+        self.add_btn = ttk.Button(
+            self.actions_frame,
+            text=tr('add_movie'),
+            command=self._add_movie_with_metadata
+        )
+        self.add_btn.pack(side=tk.LEFT, padx=5)
         
-        # Grid buttons
-        self.scan_btn.pack(side='left', padx=5, pady=5)
-        self.export_btn.pack(side='left', padx=5, pady=5)
-        self.load_btn.pack(side='left', padx=5, pady=5)
+        # Scan button
+        self.scan_btn = ttk.Button(
+            self.actions_frame,
+            text=tr('scan'),
+            command=self.start_scan
+        )
+        self.scan_btn.pack(side=tk.LEFT, padx=5)
+        
+        # Load button
+        self.load_btn = ttk.Button(
+            self.actions_frame,
+            text=tr('load_movies'),
+            command=self.load_movies_from_database
+        )
+        self.load_btn.pack(side=tk.LEFT, padx=5)
+        
+        # Export button
+        self.export_btn = ttk.Button(
+            self.actions_frame,
+            text=tr('export_csv'),
+            command=self.export_to_csv
+        )
+        self.export_btn.pack(side=tk.LEFT, padx=5)
+        
+        # Close button
+        self.close_btn = ttk.Button(
+            self.actions_frame,
+            text=tr('close_db'),
+            command=self.close_database,
+            state='disabled'
+        )
+        self.close_btn.pack(side=tk.RIGHT, padx=5)
     
     def _create_progress_bar(self):
         """Create progress bar"""
@@ -413,9 +625,13 @@ class MovieCatalogApp:
         # If search is empty, show all movies
         if not search_term:
             for movie in self.all_movies:
-                # Use a unique ID based on the movie's path to avoid duplicates
-                item_id = f"{movie[1]}_{movie[2]}"  # Using genre and movie name for ID
-                self.tree.insert('', 'end', values=movie[1:], iid=item_id)
+                # Use the movie's path as the unique ID since it should be unique for each movie
+                item_id = f"{movie[3]}"  # Assuming path is the 4th element (0-based index 3)
+                try:
+                    self.tree.insert('', 'end', values=movie[1:], iid=item_id)
+                except tk.TclError:
+                    # If item already exists, skip it
+                    continue
             return
         
         # Filter movies based on search term
@@ -423,9 +639,13 @@ class MovieCatalogApp:
         for movie in self.all_movies:
             # Check if any field contains the search term
             if any(search_term in str(field).lower() for field in movie[1:]):
-                item_id = f"{movie[1]}_{movie[2]}"  # Using genre and movie name for ID
-                self.tree.insert('', 'end', values=movie[1:], iid=item_id)
-                found = True
+                item_id = f"{movie[3]}"  # Using path as the unique ID
+                try:
+                    self.tree.insert('', 'end', values=movie[1:], iid=item_id)
+                    found = True
+                except tk.TclError:
+                    # If item already exists, skip it
+                    continue
         
         # Show message if no results found
         if not found and search_term:
@@ -719,6 +939,49 @@ class MovieCatalogApp:
                 lang.get_string('error'),
                 f"{lang.get_string('error_checking_updates')}: {str(e)}"
             )
+
+    def _add_movie_with_metadata(self):
+        """Open the movie details dialog to add a new movie with metadata."""
+        if not hasattr(self, 'database') or not self.database:
+            messagebox.showwarning(tr('error'), tr('db_not_initialized'))
+            return
+            
+        def on_save_metadata(metadata):
+            try:
+                # Save the movie to the database
+                success = self.database.add_movie_with_metadata(
+                    title=metadata['title'],
+                    year=metadata['year'],
+                    path="",  # You might want to add a file dialog for this
+                    poster_url=metadata['poster_url'],
+                    backdrop_url=metadata['backdrop_url'],
+                    overview=metadata['overview'],
+                    rating=metadata['rating'],
+                    runtime=metadata['runtime'],
+                    director=metadata['director'],
+                    cast=metadata['cast'],
+                    genres=metadata['genres'],
+                    imdb_id=metadata['imdb_id']
+                )
+                
+                if success:
+                    messagebox.showinfo(tr('success'), tr('movie_added_successfully'))
+                    self.load_movies_from_database()
+                else:
+                    messagebox.showerror(tr('error'), tr('failed_to_add_movie'))
+                    
+            except Exception as e:
+                messagebox.showerror(tr('error'), f"{tr('error_occurred')}: {str(e)}")
+        
+        # Open the movie details dialog
+        dialog = MovieDetailsDialog(
+            parent=self.root,
+            title=tr('add_new_movie'),
+            on_save=on_save_metadata
+        )
+        dialog.transient(self.root)
+        dialog.grab_set()
+        self.root.wait_window(dialog)
 
 if __name__ == "__main__":
     root = tk.Tk()
