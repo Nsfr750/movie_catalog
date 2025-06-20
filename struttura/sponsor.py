@@ -1,17 +1,15 @@
 import tkinter as tk
 import webbrowser
 
-# Sponsor Class
 class Sponsor:
     def __init__(self, root):
         self.root = root
 
-    def show_sponsor(self):
+    def show(self):
         dialog = tk.Toplevel(self.root)
         dialog.title("Sponsor the Project")
         dialog.geometry('500x150')
         
-        # Sponsor buttons
         btn_frame = tk.Frame(dialog)
         btn_frame.pack(pady=20)
         
@@ -27,6 +25,4 @@ class Sponsor:
                           command=lambda u=url: webbrowser.open(u))
             btn.pack(side=tk.LEFT, padx=5)
         
-        # Close button
         tk.Button(dialog, text="Close", command=dialog.destroy).pack(pady=10)
-

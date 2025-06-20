@@ -1,217 +1,217 @@
 # Core Dependencies
-Pillow>=10.2.0  # Required for image handling
-tkinter>=8.6  # GUI framework
-mysql-connector-python>=8.2.0  # MySQL database connector
+Pillow  # Required for image handling
+mysql-connector-python  # MySQL database connector
+tkinter  # GUI framework
 
 # Development Dependencies
-black>=24.1.0  # Code formatter
-isort>=5.13.0  # Import sorter
-flake8>=7.0.0  # Code linter
-pytest>=7.4.3  # Testing framework
-pylint>=3.0.2  # Code analysis
-mypy>=1.8.0  # Type checking
-coverage>=7.3.2  # Code coverage
-sphinx>=7.2.6  # Documentation generator
-twine>=4.1.2  # Package distribution
-wheel>=0.42.0  # Package building
+black  # Code formatter
+isort  # Import sorter
+flake8  # Code linter
+pytest  # Testing framework
+pylint  # Code analysis
+mypy  # Type checking
+coverage  # Code coverage
+sphinx  # Documentation generator
+twine  # Package distribution
+wheel  # Package building
 
 # Optional GUI Enhancements
-pygments>=2.17.2  # Syntax highlighting
+pygments  # Syntax highlighting
 
 # Optional Database Tools
-sqlalchemy>=2.0.25  # SQLAlchemy ORM
-alembic>=1.13.1  # Database migrations
+sqlalchemy  # SQLAlchemy ORM
+alembic  # Database migrations
 
 # Additional Dependencies
-csv>=1.0  # CSV file handling
-pathlib>=1.0.1  # Path manipulation
-re>=2.2.1  # Regular expressions
+csv  # CSV file handling
+pathlib  # Path manipulation
+re  # Regular expressions
 
 # Optional Testing Tools
-pytest-cov>=4.1.0  # Coverage reporting
-pytest-mock>=3.12.0  # Mocking framework
-pytest-asyncio>=0.22.1  # Async testing
+pytest-cov  # Coverage reporting
+pytest-mock  # Mocking framework
+pytest-asyncio  # Async testing
 
 # Optional Documentation Tools
-sphinx-rtd-theme>=1.3.0  # Read the Docs theme
-sphinx-autodoc-typehints>=1.24.0  # Type hint documentation
+sphinx-rtd-theme  # Read the Docs theme
+sphinx-autodoc-typehints  # Type hint documentation
 
 # Optional Build Tools
-setuptools>=70.0.0  # Package management
-types-setuptools>=70.0.0.0  # Type stubs for setuptools
+setuptools  # Package management
+types-setuptools  # Type stubs for setuptools
 
 # Optional Development Tools
-pre-commit>=3.5.0  # Git hooks management
-mypy-extensions>=1.0.0  # MyPy extensions
-python-dotenv>=1.0.0  # Environment variables
+pre-commit  # Git hooks management
+mypy-extensions  # MyPy extensions
+python-dotenv  # Environment variables
 
 # Optional Performance Tools
-uvloop>=0.19.0  # Asyncio event loop
-aiohttp>=3.9.1  # Async HTTP client/server
+uvloop  # Asyncio event loop
+aiohttp  # Async HTTP client/server
 
 # Optional Security Tools
-cryptography>=42.0.2  # Cryptographic recipes and primitives
-pycryptodome>=3.19.0  # Cryptographic library
+cryptography  # Cryptographic recipes and primitives
+pycryptodome  # Cryptographic library
 
 # Optional Logging Tools
-structlog>=24.1.0  # Structured logging
-python-json-logger>=2.0.7  # JSON logging
+structlog  # Structured logging
+python-json-logger  # JSON logging
 
 # Optional Monitoring Tools
-prometheus-client>=0.19.0  # Prometheus metrics
-statsd>=4.0.0  # StatsD client
+prometheus-client  # Prometheus metrics
+statsd  # StatsD client
 
 # Optional Caching Tools
-redis>=5.0.1  # Redis client
-aioredis>=2.3.0  # Async Redis client
+redis  # Redis client
+aioredis  # Async Redis client
 
 # Optional Queue Tools
-celery>=5.3.6  # Distributed task queue
-kombu>=5.4.0  # Messaging library
+celery  # Distributed task queue
+kombu  # Messaging library
 
 # Optional Search Tools
-elasticsearch>=8.12.1  # Elasticsearch client
-whoosh>=2.7.4  # Full-text search engine
+elasticsearch  # Elasticsearch client
+whoosh  # Full-text search engine
 
 # Optional Machine Learning Tools
-scikit-learn>=1.3.2  # Machine learning library
-numpy>=1.26.2  # Numerical computing
-pandas>=2.1.3  # Data analysis
+scikit-learn  # Machine learning library
+numpy  # Numerical computing
+pandas  # Data analysis
 
 # Optional Data Visualization Tools
-matplotlib>=3.8.2  # Plotting library
-seaborn>=0.12.2  # Statistical data visualization
-bokeh>=3.3.0  # Interactive visualization
+matplotlib  # Plotting library
+seaborn  # Statistical data visualization
+bokeh  # Interactive visualization
 
 # Optional Web Framework Tools
-fastapi>=0.109.0  # Web framework
-uvicorn>=0.27.0  # ASGI server
-jinja2>=3.1.2  # Template engine
+fastapi  # Web framework
+uvicorn  # ASGI server
+jinja2  # Template engine
 
 # Optional Database Drivers
-mysql-connector-python>=8.2.0  # MySQL database driver
-sqlite3>=2.6.0  # SQLite database driver
-psycopg2-binary>=2.9.9  # PostgreSQL database driver
-pymongo>=4.5.0  # MongoDB database driver
-redis>=5.0.1  # Redis database driver
+mysql-connector-python  # MySQL database driver
+sqlite3  # SQLite database driver
+psycopg2-binary  # PostgreSQL database driver
+pymongo  # MongoDB database driver
+redis  # Redis database driver
 
 # Optional API Clients
-requests>=2.31.0  # HTTP client
-httpx>=0.26.0  # Async HTTP client
-aiohttp>=3.9.1  # Async HTTP client/server
+requests  # HTTP client
+httpx  # Async HTTP client
+aiohttp  # Async HTTP client/server
 
 # Optional Testing Tools (Additional)
-pytest-xdist>=3.4.0  # Parallel testing
-pytest-timeout>=2.2.0  # Test timeouts
-pytest-vcr>=1.0.4  # VCR.py integration
+pytest-xdist  # Parallel testing
+pytest-timeout  # Test timeouts
+pytest-vcr  # VCR.py integration
 
 # Optional Documentation Tools (Additional)
-sphinx-tabs>=3.4.0  # Tabbed content
-sphinx-copybutton>=0.5.2  # Copy button for code blocks
-sphinx-autobuild>=2021.3.14  # Auto-rebuild documentation
+sphinx-tabs  # Tabbed content
+sphinx-copybutton  # Copy button for code blocks
+sphinx-autobuild  # Auto-rebuild documentation
 
 # Optional Build Tools (Additional)
-build>=1.0.3  # PEP 517/518 build system
-hatchling>=1.18.0  # Modern build system
-poetry>=1.7.0  # Dependency management and packaging
+build  # PEP 517/518 build system
+hatchling  # Modern build system
+poetry  # Dependency management and packaging
 
 # Optional Development Tools (Additional)
-python-lsp-server>=1.11.0  # Language server protocol
-pyright>=1.1.361  # Static type checker
-debugpy>=1.8.0  # Debug adapter
+python-lsp-server  # Language server protocol
+pyright  # Static type checker
+debugpy  # Debug adapter
 
 # Optional Performance Tools (Additional)
-aiosqlite>=0.19.0  # Async SQLite
-asyncpg>=0.29.0  # Async PostgreSQL
-uvloop>=0.19.0  # Asyncio event loop
+aiosqlite  # Async SQLite
+asyncpg  # Async PostgreSQL
+uvloop  # Asyncio event loop
 
 # Optional Security Tools (Additional)
-bandit>=1.7.5  # Security linter
-safety>=2.3.2  # Security vulnerability scanner
-pytaint>=0.1.0  # Taint analysis
+bandit  # Security linter
+safety  # Security vulnerability scanner
+pytaint  # Taint analysis
 
 # Optional Logging Tools (Additional)
-loguru>=0.7.2  # Modern logging library
-structlog>=24.1.0  # Structured logging
-python-json-logger>=2.0.7  # JSON logging
+loguru  # Modern logging library
+structlog  # Structured logging
+python-json-logger  # JSON logging
 
 # Optional Monitoring Tools (Additional)
-prometheus-fastapi-instrumentator>=6.0.0  # Prometheus metrics for FastAPI
-sentry-sdk>=1.39.2  # Error tracking
-newrelic>=7.14.0.190  # Application monitoring
+prometheus-fastapi-instrumentator  # Prometheus metrics for FastAPI
+sentry-sdk  # Error tracking
+newrelic  # Application monitoring
 
 # Optional Caching Tools (Additional)
-redis-py-cluster>=2.2.0  # Redis cluster client
-aioredis-cluster>=2.0.1  # Async Redis cluster
-memcached>=0.3.4  # Memcached client
+redis-py-cluster  # Redis cluster client
+aioredis-cluster  # Async Redis cluster
+memcached  # Memcached client
 
 # Optional Queue Tools (Additional)
-rq>=1.15.1  # Redis-backed queue
-flower>=1.4.0  # Celery monitoring
-kafka-python>=2.0.2  # Apache Kafka client
+rq  # Redis-backed queue
+flower  # Celery monitoring
+kafka-python  # Apache Kafka client
 
 # Optional Search Tools (Additional)
-pyes>=0.99.7  # Elasticsearch client
-whoosh>=2.7.4  # Full-text search engine
-sphinxsearch>=2.2.11  # Sphinx search engine
+pyes  # Elasticsearch client
+whoosh  # Full-text search engine
+sphinxsearch  # Sphinx search engine
 
 # Optional Machine Learning Tools (Additional)
-tensorflow>=2.15.0  # Machine learning framework
-pytorch>=2.1.0  # Machine learning framework
-scikit-learn>=1.3.2  # Machine learning library
+tensorflow  # Machine learning framework
+pytorch  # Machine learning framework
+scikit-learn  # Machine learning library
 
 # Optional Data Visualization Tools (Additional)
-plotly>=5.18.0  # Interactive plots
-altair>=5.2.0  # Declarative statistical visualization
-bokeh>=3.3.0  # Interactive visualization
+plotly  # Interactive plots
+altair  # Declarative statistical visualization
+bokeh  # Interactive visualization
 
 # Optional Web Framework Tools (Additional)
-django>=5.0.0  # Web framework
-flask>=3.0.0  # Web framework
-fastapi>=0.109.0  # Web framework
+django  # Web framework
+flask  # Web framework
+fastapi  # Web framework
 
 # Optional Database Drivers (Additional)
-sqlalchemy-utils>=0.39.1  # SQLAlchemy utilities
-alembic>=1.13.1  # Database migrations
-sqlalchemy-migrate>=0.13.0  # Database migrations
+sqlalchemy-utils  # SQLAlchemy utilities
+alembic  # Database migrations
+sqlalchemy-migrate  # Database migrations
 
 # Optional API Clients (Additional)
-restkit>=4.2.2  # REST client
-requests-oauthlib>=1.3.1  # OAuth 1.0a and OAuth 2.0 support
-python-jose>=3.3.0  # JSON Web Token implementation
+restkit  # REST client
+requests-oauthlib  # OAuth 1.0a and OAuth 2.0 support
+python-jose  # JSON Web Token implementation
 
 # Optional Testing Tools (Additional)
-pytest-cov>=4.1.0  # Coverage reporting
-pytest-mock>=3.12.0  # Mocking framework
-pytest-asyncio>=0.22.1  # Async testing
+pytest-cov  # Coverage reporting
+pytest-mock  # Mocking framework
+pytest-asyncio  # Async testing
 
 # Optional Documentation Tools (Additional)
-sphinx-autodoc-typehints>=1.24.0  # Type hint documentation
-sphinxcontrib-apidoc>=0.3.0  # API documentation
-sphinxcontrib-openapi>=0.8.0  # OpenAPI documentation
+sphinx-autodoc-typehints  # Type hint documentation
+sphinxcontrib-apidoc  # API documentation
+sphinxcontrib-openapi  # OpenAPI documentation
 
 # Optional Build Tools (Additional)
-setuptools>=70.0.0  # Package management
-types-setuptools>=70.0.0.0  # Type stubs for setuptools
-wheel>=0.42.0  # Package building
+setuptools  # Package management
+types-setuptools  # Type stubs for setuptools
+wheel  # Package building
 
 # Optional Development Tools (Additional)
-pre-commit>=3.5.0  # Git hooks management
-mypy-extensions>=1.0.0  # MyPy extensions
-python-dotenv>=1.0.0  # Environment variables
+pre-commit  # Git hooks management
+mypy-extensions  # MyPy extensions
+python-dotenv  # Environment variables
 
 # Optional Performance Tools (Additional)
-aiosqlite>=0.19.0  # Async SQLite
-asyncpg>=0.29.0  # Async PostgreSQL
-uvloop>=0.19.0  # Asyncio event loop
-sqlite3-tools>=0.1.0  # SQLite database management
+aiosqlite  # Async SQLite
+asyncpg  # Async PostgreSQL
+uvloop  # Asyncio event loop
+sqlite3-tools  # SQLite database management
 
 # Optional system tools
-psutil>=5.9.0  # System monitoring
+psutil  # System monitoring
 
 # Optional logging
-loguru>=0.7.0  # Enhanced logging
+loguru  # Enhanced logging
 
 # Optional UI testing
-pytest-qt>=4.0.0  # Qt testing
-pytest-tkinter>=0.1.0  # Tkinter testing
+pytest-qt  # Qt testing
+pytest-tkinter  # Tkinter testing

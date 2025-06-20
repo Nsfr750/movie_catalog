@@ -1,18 +1,12 @@
 import os
 import tkinter as tk
-from tkinter import ttk, messagebox, filedialog
+from tkinter import ttk, filedialog, messagebox
 import threading
-from queue import Queue, Empty
-import csv
-from db import MySQLDatabase
-from datetime import datetime
-from pathlib import Path
-import re
-from PIL import Image, ImageTk
-from version import get_version
-from about import About
-from help import Help
-from sponsor import Sponsor
+import queue
+from lang import lang
+from struttura.version import get_version
+from struttura.menu import AppMenu
+from struttura import db
 
 class Database:
     def __init__(self, root):
@@ -20,7 +14,7 @@ class Database:
         self.root = root
         
     def initialize(self):
-        self.db = MySQLDatabase(self.root)
+        self.db = db.MySQLDatabase(self.root)
         if not self.db.create_database():
             return False
             
@@ -101,66 +95,56 @@ class MovieScanner:
 class MovieCatalogApp:
     def __init__(self, root):
         self.root = root
-        self.root.title(f"Movie Catalog v{get_version()}")
+        self.root.title(f"{lang.get_string('app_title')} v{get_version()}")
         self.root.geometry("1000x600")
         
         # Initialize components
-        self.result_queue = Queue()
+        self.result_queue = queue.Queue()
         self.database = Database(root)
-        self.about = About()
-        self.help = Help()
-        self.sponsor = Sponsor(root)
+        self.movies_to_save = []
+        self.scanning = False
         
         # Initialize database before creating menu
         if not self.database.initialize():
-            # If database initialization fails, show config form
-            if not self.database.db.config.show_config_form():
-                messagebox.showerror("Error", "Failed to configure database")
-                root.destroy()
-                return
-        
+            messagebox.showerror(lang.get_string('error'), lang.get_string('db_init_failed'))
+            self.root.quit()
+            return
+
         # Create main frame
-        self.main_frame = ttk.Frame(root)
-        self.main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
-        self.main_frame.grid_columnconfigure(0, weight=1)
+        self.main_frame = ttk.Frame(self.root)
+        self.main_frame.pack(fill='both', expand=True)
         
-        # Create main frame
-        self.main_frame = ttk.Frame(root)
-        self.main_frame.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
-        self.main_frame.grid_columnconfigure(0, weight=1)
-        
-        # Configure root window
-        root.configure(bg='#f0f0f0')
-        root.grid_columnconfigure(0, weight=1)
-        root.grid_rowconfigure(0, weight=1)
-        
-        # Create menu
-        self.create_menu()
-        
-        # Initialize state
-        self.scan_thread = None
-        self.scanning = False
-        self.movies_to_save = []
-        self.tree = None
-        
-        # Initialize GUI components
         self._create_gui_components()
+        self.menu = AppMenu(self)
+        self.update_status(lang.get_string('ready'))
+        self.set_language('en')
         
-        # Load movies from database
-        self.load_movies_from_database()
-        
-        # Update status
-        self.update_status("Ready")
+    def set_language(self, lang_code):
+        lang.set_language(lang_code)
+        self.update_ui_texts()
+
+    def update_ui_texts(self):
+        """Update all UI texts to the current language."""
+        self.root.title(f"{lang.get_string('app_title')} v{get_version()}")
+        self.dir_frame.config(text=lang.get_string('select_directory'))
+        self.browse_btn.config(text=lang.get_string('browse'))
+        self.actions_frame.config(text=lang.get_string('actions'))
+        self.scan_btn.config(text=lang.get_string('scan_movies'))
+        self.export_btn.config(text=lang.get_string('export_csv'))
+        self.load_btn.config(text=lang.get_string('load_from_db'))
+        self.tree.heading("Genre", text=lang.get_string('genre'))
+        self.tree.heading("Movie Name", text=lang.get_string('movie_name'))
+        self.tree.heading("Path", text=lang.get_string('path'))
 
     def load_movies_from_database(self):
         """Load movies from database into treeview"""
         if not self.database or not self.database.db:
-            messagebox.showerror("Error", "Database not initialized")
+            messagebox.showerror(lang.get_string('error'), lang.get_string('db_not_initialized'))
             return
             
         movies = self.database.get_all_movies()
         if not movies:
-            messagebox.showinfo("Info", "No movies found in database")
+            messagebox.showinfo(lang.get_string('info'), lang.get_string('no_movies_found'))
             return
             
         # Clear existing items
@@ -175,24 +159,24 @@ class MovieCatalogApp:
     def _new_database(self):
         """Create a new database"""
         if self.database.initialize():
-            messagebox.showinfo("Success", "Database created successfully!")
+            messagebox.showinfo(lang.get_string('success'), lang.get_string('db_created'))
         else:
-            messagebox.showerror("Error", "Failed to create database")
+            messagebox.showerror(lang.get_string('error'), lang.get_string('db_create_failed'))
     
     def _open_database(self):
         """Open database configuration form"""
         if self.database.db:
             self.database.db.config.show_config_form()
         else:
-            messagebox.showerror("Error", "Database not initialized")
+            messagebox.showerror(lang.get_string('error'), lang.get_string('db_not_initialized'))
     
     def _close_database(self):
         """Close database connection"""
         if self.database.db:
             self.database.db.close_connection()
-            messagebox.showinfo("Success", "Database connection closed")
+            messagebox.showinfo(lang.get_string('success'), lang.get_string('db_closed'))
         else:
-            messagebox.showerror("Error", "Database not initialized")
+            messagebox.showerror(lang.get_string('error'), lang.get_string('db_not_initialized'))
     
     def _create_gui_components(self):
         """Create all GUI components"""
@@ -213,35 +197,37 @@ class MovieCatalogApp:
     
     def _create_directory_frame(self):
         """Create directory selection frame"""
-        frame = ttk.LabelFrame(self.main_frame, text="Movie Directory", padding="10 5")
-        frame.grid(row=0, column=0, sticky=(tk.W, tk.E), padx=10, pady=(10, 5))
+        self.dir_frame = ttk.LabelFrame(self.main_frame, text=lang.get_string('select_directory'))
+        self.dir_frame.pack(fill='x', padx=10, pady=5)
         
-        self.path_var = tk.StringVar()
-        ttk.Entry(frame, textvariable=self.path_var, width=50).grid(row=0, column=0, padx=5, pady=5)
-        ttk.Button(frame, text="Browse", command=self.browse_directory).grid(row=0, column=1, padx=5, pady=5)
-    
+        self.dir_entry = ttk.Entry(self.dir_frame, width=50)
+        self.dir_entry.pack(side='left', fill='x', expand=True, padx=5, pady=5)
+        
+        self.browse_btn = ttk.Button(self.dir_frame, text=lang.get_string('browse'), command=self.browse_directory)
+        self.browse_btn.pack(side='left', padx=5, pady=5)
+
     def _create_actions_frame(self):
         """Create actions frame with buttons"""
-        frame = ttk.LabelFrame(self.main_frame, text="Actions", padding="10 5")
-        frame.grid(row=1, column=0, sticky=(tk.W, tk.E), padx=10, pady=5)
+        self.actions_frame = ttk.LabelFrame(self.main_frame, text=lang.get_string('actions'))
+        self.actions_frame.pack(fill='x', padx=10, pady=5)
         
         # Create buttons
-        self.scan_btn = ttk.Button(frame, text="Scan Movies", command=self.start_scan)
-        self.export_btn = ttk.Button(frame, text="Export to CSV", command=self.export_to_csv)
-        self.load_btn = ttk.Button(frame, text="Load from Database", command=self.load_from_database)
+        self.scan_btn = ttk.Button(self.actions_frame, text=lang.get_string('scan_movies'), command=self.start_scan)
+        self.export_btn = ttk.Button(self.actions_frame, text=lang.get_string('export_csv'), command=self.export_to_csv)
+        self.load_btn = ttk.Button(self.actions_frame, text=lang.get_string('load_from_db'), command=self.load_from_database)
         
         # Grid buttons
-        self.scan_btn.grid(row=0, column=0, padx=5, pady=5)
-        self.export_btn.grid(row=0, column=1, padx=5, pady=5)
-        self.load_btn.grid(row=0, column=2, padx=5, pady=5)
+        self.scan_btn.pack(side='left', padx=5, pady=5)
+        self.export_btn.pack(side='left', padx=5, pady=5)
+        self.load_btn.pack(side='left', padx=5, pady=5)
     
     def _create_progress_bar(self):
         """Create progress bar"""
         frame = ttk.Frame(self.main_frame)
-        frame.grid(row=2, column=0, sticky=(tk.W, tk.E), padx=10, pady=5)
+        frame.pack(fill='x', padx=10, pady=5)
         
         self.progress = ttk.Progressbar(frame, orient="horizontal", mode="determinate")
-        self.progress.grid(row=0, column=0, sticky=(tk.W, tk.E), padx=5, pady=5)
+        self.progress.pack(fill='x', padx=5, pady=5)
     
     def _create_tree_view(self):
         """Create tree view with scrollbar"""
@@ -249,15 +235,15 @@ class MovieCatalogApp:
         
         # Create tree frame with proper padding
         tree_frame = ttk.Frame(self.main_frame)
-        tree_frame.grid(row=3, column=0, columnspan=3, pady=10, sticky=(tk.W, tk.E, tk.N, tk.S))
+        tree_frame.pack(fill='both', expand=True, padx=10, pady=5)
         
         # Tree view with columns
         self.tree = ttk.Treeview(tree_frame, columns=("Genre", "Movie Name", "Path"), show="headings")
         
         # Set column headings
-        self.tree.heading("Genre", text="Genre")
-        self.tree.heading("Movie Name", text="Movie Name")
-        self.tree.heading("Path", text="Path")
+        self.tree.heading("Genre", text=lang.get_string('genre'))
+        self.tree.heading("Movie Name", text=lang.get_string('movie_name'))
+        self.tree.heading("Path", text=lang.get_string('path'))
         
         # Configure columns
         self.tree.column("Genre", width=100)
@@ -269,12 +255,11 @@ class MovieCatalogApp:
         self.tree.configure(yscrollcommand=scrollbar.set)
         
         # Grid layout within tree frame
-        self.tree.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
-        scrollbar.grid(row=0, column=1, sticky=(tk.N, tk.S))
+        self.tree.pack(side='left', fill='both', expand=True, padx=5, pady=5)
+        scrollbar.pack(side='right', fill='y', padx=5, pady=5)
         
         # Configure tree frame to expand with window
-        tree_frame.grid_columnconfigure(0, weight=1)
-        tree_frame.grid_rowconfigure(0, weight=1)
+        tree_frame.pack_propagate(True)
         
         # Ensure tree is visible
         tree_frame.update_idletasks()
@@ -283,45 +268,12 @@ class MovieCatalogApp:
     
     def _create_status_bar(self):
         """Create status bar"""
-        frame = ttk.Frame(self.main_frame)
-        frame.grid(row=4, column=0, sticky=(tk.W, tk.E), padx=10, pady=5)
-        frame.grid_columnconfigure(0, weight=1)
+        self.status_frame = ttk.Frame(self.main_frame)
+        self.status_frame.pack(fill='x', padx=10, pady=5)
+        self.status_frame.pack_propagate(True)
         
-        self.status_label = ttk.Label(frame, text="Ready", anchor=tk.W)
-        self.status_label.grid(row=0, column=0, padx=5, pady=5)
-        
-
-    
-    def create_menu(self):
-        """Create application menu"""
-        menubar = tk.Menu(self.root)
-        self.root.config(menu=menubar)
-        
-        # File menu
-        file_menu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="File", menu=file_menu)
-        
-        # Add File menu items
-        file_menu.add_command(label="New Database", command=self._new_database)
-        file_menu.add_command(label="Open Database", command=self._open_database)
-        file_menu.add_command(label="Close Database", command=self._close_database)
-        file_menu.add_separator()
-        file_menu.add_command(label="Scan Directory", command=self.start_scan)
-        file_menu.add_separator()
-        file_menu.add_command(label="Export to CSV", command=self.export_to_csv)
-        file_menu.add_separator()
-        file_menu.add_command(label="Load from Database", command=self.load_from_database)
-        file_menu.add_separator()
-        file_menu.add_command(label="Exit", command=self.root.quit)
-        
-        # Help menu
-        help_menu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Help", menu=help_menu)
-        
-        # Add Help menu items
-        help_menu.add_command(label="Help", command=lambda: Help.show_help(self.root))
-        help_menu.add_command(label="About", command=lambda: About.show_about(self.root))
-        help_menu.add_command(label="Sponsor", command=lambda: Sponsor(self.root).show_sponsor())
+        self.status_label = ttk.Label(self.status_frame, text=lang.get_string('ready'), anchor=tk.W)
+        self.status_label.pack(fill='x', padx=5, pady=5)
 
     def update_status(self, message):
         """Update the status bar message"""
@@ -332,11 +284,12 @@ class MovieCatalogApp:
         """Browse for directory"""
         directory = filedialog.askdirectory()
         if directory:
-            self.path_var.set(directory)
+            self.dir_entry.delete(0, tk.END)
+            self.dir_entry.insert(0, directory)
 
     def new_database(self):
         """Create a new database"""
-        if messagebox.askyesno("New Database", "Create a new database? This will clear all existing data."):
+        if messagebox.askyesno(lang.get_string('new_database'), lang.get_string('create_new_db')):
             try:
                 # Create database in user's documents folder to avoid permission issues
                 documents_path = os.path.join(os.path.expanduser("~"), "Documents")
@@ -363,10 +316,10 @@ class MovieCatalogApp:
                 if hasattr(self, 'close_database_btn'):
                     self.close_database_btn.configure(state='normal')
                 
-                messagebox.showinfo("Success", f"New database created successfully at: {db_path}")
+                messagebox.showinfo(lang.get_string('success'), f"{lang.get_string('db_created')} {db_path}")
                 return True
             except Exception as e:
-                messagebox.showerror("Error", f"Failed to create new database: {str(e)}")
+                messagebox.showerror(lang.get_string('error'), f"{lang.get_string('db_create_failed')}: {str(e)}")
                 # Reset database to None if creation fails
                 self.database = None
                 return False
@@ -375,7 +328,7 @@ class MovieCatalogApp:
     def open_database(self):
         """Open an existing database"""
         filename = filedialog.askopenfilename(
-            title="Open Database",
+            title=lang.get_string('open_database'),
             filetypes=[('SQLite Database', '*.db'), ('All files', '*.*')]
         )
         if filename:
@@ -396,26 +349,26 @@ class MovieCatalogApp:
                 if hasattr(self, 'close_database_btn'):
                     self.close_database_btn.configure(state='normal')
                 
-                messagebox.showinfo("Success", f"Database opened successfully: {filename}")
+                messagebox.showinfo(lang.get_string('success'), f"{lang.get_string('db_opened')} {filename}")
                 return True
             except Exception as e:
-                messagebox.showerror("Error", f"Failed to open database: {str(e)}")
+                messagebox.showerror(lang.get_string('error'), f"{lang.get_string('db_open_failed')}: {str(e)}")
                 self.database = None
                 return False
         return False
 
     def close_database(self):
         """Close the current database"""
-        if messagebox.askyesno("Close Database", "Close the current database?"):
+        if messagebox.askyesno(lang.get_string('close_database'), lang.get_string('close_db')):
             try:
                 self.database = None
                 if self.tree:
                     self.tree.delete(*self.tree.get_children())
                 if hasattr(self, 'close_database_btn'):
                     self.close_database_btn.configure(state='disabled')
-                messagebox.showinfo("Success", "Database closed successfully")
+                messagebox.showinfo(lang.get_string('success'), lang.get_string('db_closed'))
             except Exception as e:
-                messagebox.showerror("Error", f"Failed to close database: {str(e)}")
+                messagebox.showerror(lang.get_string('error'), f"{lang.get_string('db_close_failed')}: {str(e)}")
 
     def scan_directory(self, directory):
         """Scan directory for movies and update progress"""
@@ -423,23 +376,23 @@ class MovieCatalogApp:
             scanner = MovieScanner(directory, self.result_queue)
             scanner.scan()
         except Exception as e:
-            messagebox.showerror("Error", f"Error scanning directory: {str(e)}")
+            messagebox.showerror(lang.get_string('error'), f"{lang.get_string('scan_failed')}: {str(e)}")
             self.scanning = False
             self.scan_btn.configure(state="normal")
             self.export_btn.configure(state="normal")
             self.load_btn.configure(state="normal")
-            self.update_status("Ready")
+            self.update_status(lang.get_string('ready'))
             self.result_queue.put('finished')
 
     def start_scan(self):
         """Start scanning for movies in selected directory"""
         if not self.database:
-            messagebox.showwarning("Error", "Please create or open a database first")
+            messagebox.showwarning(lang.get_string('error'), lang.get_string('db_not_initialized'))
             return
             
-        directory = self.path_var.get()
-        if not os.path.exists(directory):
-            messagebox.showwarning("Error", "Please select a valid directory")
+        directory = self.dir_entry.get()
+        if not directory or not os.path.isdir(directory):
+            messagebox.showwarning(lang.get_string('warning'), lang.get_string('select_valid_directory'))
             return
             
         self.scan_btn.configure(state="disabled")
@@ -465,25 +418,27 @@ class MovieCatalogApp:
             while True:
                 try:
                     result = self.result_queue.get_nowait()
+                    result_type = result[0]
+                    data = result[1]
                     
-                    if isinstance(result, tuple) and len(result) == 2 and result[0] == 'progress':
-                        progress_value = result[1]
+                    if result_type == 'progress':
+                        progress_value = data
                         self.progress['value'] = progress_value
-                        self.update_status(f"Scanning... {progress_value}%")
-                    elif isinstance(result, tuple) and len(result) == 2 and result[0] == 'finished':
+                        self.update_status(f"{lang.get_string('scanning')}... {progress_value}%")
+                    elif result_type == 'finished':
                         # Store all results in one batch
                         self.database.db.store_scanned_files(self.movies_to_save)
                         self.movies_to_save.clear()
                         
                         self.scanning = False
-                        self.update_status("Ready")
-                        messagebox.showinfo("Scan Complete", "Movie scanning completed!")
+                        self.update_status(lang.get_string('ready'))
+                        messagebox.showinfo(lang.get_string('scan_complete'), lang.get_string('scan_completed_message'))
                         self.scan_btn.configure(state="normal")
                         self.export_btn.configure(state="normal")
                         self.load_btn.configure(state="normal")
                         break
-                    elif isinstance(result, tuple) and len(result) == 3:
-                        genre, movie_name, path = result
+                    elif result_type == 'movie':
+                        genre, movie_name, path = data
                         print(f"Processing movie: {genre}, {movie_name}, {path}")
                         print(f"Tree exists: {self.tree is not None}")
                         if self.tree:
@@ -495,38 +450,38 @@ class MovieCatalogApp:
                     else:
                         print(f"Unknown result type: {result}")
                         continue
-                except Empty:
+                except queue.Empty:
                     if self.scanning:
                         self.root.after(100, self.process_results)
                     break
         except Exception as e:
             print(f"Error in process_results: {str(e)}")
-            messagebox.showerror("Error", f"Error processing results: {str(e)}")
+            messagebox.showerror(lang.get_string('error'), f"{lang.get_string('process_results_failed')}: {str(e)}")
             if self.scanning:
                 self.root.after(100, self.process_results)
                 
         # Ensure tree is visible
         if self.tree:
-            self.tree.update_idletasks()
+            self.tree.pack(fill='both', expand=True)
 
     def export_to_csv(self):
         """Export movies to CSV file"""
         filename = filedialog.asksaveasfilename(
             defaultextension='.csv',
             filetypes=[('CSV files', '*.csv'), ('All files', '*.*')],
-            title='Export to CSV'
+            title=lang.get_string('export_to_csv')
         )
         if filename:
             try:
                 self.database.export_to_csv(filename)
-                messagebox.showinfo("Success", f"Data exported to {filename}")
+                messagebox.showinfo(lang.get_string('success'), f"{lang.get_string('data_exported')} {filename}")
             except Exception as e:
-                messagebox.showerror("Error", f"Failed to export data: {str(e)}")
+                messagebox.showerror(lang.get_string('error'), f"{lang.get_string('export_failed')}: {str(e)}")
 
     def load_from_database(self):
         """Load movies from database into treeview"""
         if not self.database:
-            messagebox.showwarning("Error", "Please create or open a database first")
+            messagebox.showwarning(lang.get_string('error'), lang.get_string('db_not_initialized'))
             return
             
         try:
@@ -542,26 +497,9 @@ class MovieCatalogApp:
             for movie in movies:
                 self.tree.insert("", "end", values=movie)
                 
-            messagebox.showinfo("Success", "Movies loaded from database")
+            messagebox.showinfo(lang.get_string('success'), lang.get_string('movies_loaded'))
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to load movies: {str(e)}")
-
-    def export_to_csv(self):
-        filename = filedialog.asksaveasfilename(
-            defaultextension='.csv',
-            filetypes=[('CSV files', '*.csv'), ('All files', '*.*')],
-            title='Save as CSV'
-        )
-        if filename:
-            try:
-                self.database.export_to_csv(filename)
-                messagebox.showinfo("Success", f"Data exported to {filename}")
-            except Exception as e:
-                messagebox.showerror("Error", f"Failed to export data: {str(e)}")
-    
-    def load_from_database(self):
-        """Load movies from database into treeview"""
-        self.load_movies_from_database()
+            messagebox.showerror(lang.get_string('error'), f"{lang.get_string('load_movies_failed')}: {str(e)}")
 
 if __name__ == "__main__":
     root = tk.Tk()

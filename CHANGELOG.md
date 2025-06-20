@@ -5,6 +5,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2025-06-20
+### Added
+- **Multilingual Support**: Added dynamic language switching between English and Italian.
+- **Language Menu**: New menu for selecting the application language at runtime.
+- **`struttura` Package**: Created a new package to house core application logic.
+- **`requirements.txt`**: Added a file to manage project dependencies.
+
+### Changed
+- **Project Structure**: Refactored `db.py`, `version.py`, `about.py`, `help.py`, and `sponsor.py` into the `struttura` package.
+- **Menu Logic**: Moved all menu creation and management into a dedicated `AppMenu` class in `struttura/menu.py`.
+- **Dialogs as Classes**: Refactored `About`, `Help`, and `Sponsor` dialogs from static methods to classes.
+- **UI Updates**: All UI text now updates dynamically when the language is changed.
+
+### Fixed
+- **`AttributeError` on Startup**: Fixed a regression where `main_frame` was not initialized correctly.
+- **`TypeError` in Dialogs**: Corrected the instantiation of `About`, `Help`, and `Sponsor` classes.
+- **Language Switch**: Fixed a bug where changing the language did not update the UI text.
+
 ## [1.6.0] - 2025-05-19
 ### Added
 - Tree view for displaying movies with genre, name, and path

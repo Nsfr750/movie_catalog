@@ -1,21 +1,21 @@
 import tkinter as tk
 from tkinter import ttk
-from version import get_version
+from .version import get_version
 
 class About:
-    @staticmethod
-    def show_about(root):
-        about_dialog = tk.Toplevel(root)
+    def __init__(self, root):
+        self.root = root
+
+    def show(self):
+        about_dialog = tk.Toplevel(self.root)
         about_dialog.title('About Movie Catalog')
-        about_dialog.geometry('400x250') # larg X alt
-        about_dialog.transient(root)
+        about_dialog.geometry('400x250')
+        about_dialog.transient(self.root)
         about_dialog.grab_set()
 
-        # Add app icon or logo here if you have one
         title = ttk.Label(about_dialog, text='Movie Catalog', font=('Helvetica', 16, 'bold'))
         title.pack(pady=20)
 
-        # Get version dynamically from version.py
         version = ttk.Label(about_dialog, text=f'Version {get_version()}')
         version.pack()
 

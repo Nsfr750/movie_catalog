@@ -3,12 +3,14 @@ from tkinter import ttk
 import webbrowser
 
 class Help:
-    @staticmethod
-    def show_help(root):
-        help_dialog = tk.Toplevel(root)
+    def __init__(self, root):
+        self.root = root
+
+    def show(self):
+        help_dialog = tk.Toplevel(self.root)
         help_dialog.title('Help')
         help_dialog.geometry('500x600') # larg X alt
-        help_dialog.transient(root)
+        help_dialog.transient(self.root)
         help_dialog.grab_set()
 
         # Create a notebook for different help sections
@@ -80,7 +82,7 @@ class Help:
         
         support_text = '''
         Support Options:
-        - Email: support@example.com
+        - Email: nsfr750@yandex.com
         - GitHub Issues: https://github.com/Nsfr750/movie-catalog/issues
         - Discord: https://discord.gg/BvvkUEP9
         '''
