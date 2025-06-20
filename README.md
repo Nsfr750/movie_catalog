@@ -1,106 +1,99 @@
-# Movie Catalog
+# 🎬 Movie Catalog
 
-**Version: 1.7.1**
+[![GitHub release](https://img.shields.io/github/v/release/Nsfr750/movie_catalog?style=for-the-badge)](https://github.com/Nsfr750/movie_catalog/releases)
+[![Python Version](https://img.shields.io/badge/python-3.8+-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=for-the-badge)](https://github.com/Nsfr750/movie_catalog/graphs/commit-activity)
 
 A modern Python GUI application for managing and cataloging your movie collection, built with Tkinter and MySQL.
 
-## Features
+## ✨ Features
 
-- **Movie Scanning**: Scan directories to find movie files and extract genre and movie names.
-- **Database Integration**: Store your movie collection in a MySQL database.
-- **Dynamic UI**: A clean and responsive user interface built with `tkinter.ttk`.
-- **Multilingual Support**: Switch between English and Italian at runtime.
-- **Automatic Updates**: Check for and install application updates.
-- **Configurable Settings**: Customize application behavior through a settings dialog.
-- **Logging**: Comprehensive logging system with configurable log levels.
-- **Data Export**: Export your movie catalog to a CSV file.
-- **Modular Structure**: Code is organized into a `struttura` package for better maintainability.
-- **Sponsor Support**: Support the project through various platforms directly from the application.
+- 🎥 **Movie Scanning**: Scan directories to find movie files and extract genre and movie names.
+- 💾 **Database Integration**: Store your movie collection in a MySQL database.
+- 🎨 **Dynamic UI**: A clean and responsive user interface built with `tkinter.ttk`.
+- 🌐 **Multilingual Support**: Switch between English and Italian at runtime.
+- 🔄 **Automatic Updates**: Check for and install application updates.
+- ⚙️ **Configurable Settings**: Customize application behavior through a settings dialog.
+- 📝 **Logging**: Comprehensive logging system with configurable log levels.
+- 📤 **Data Export**: Export your movie catalog to a CSV file.
+- 🏗️ **Modular Structure**: Code is organized into a `struttura` package for better maintainability.
+- 💖 **Sponsor Support**: Support the project through various platforms directly from the application.
 
-## Project Structure
-
-The project has been refactored for clarity and scalability:
+## 🏗️ Project Structure
 
 ```
 movie_catalog/
-├── lang/
-│   ├── lang.py         # Handles language translations
+├── 📁 lang/                 # Language files
+│   ├── 🌐 lang.py         # Handles language translations
 │   └── __init__.py
-├── logs/               # Application logs
-│   └── app.log
-├── struttura/
-│   ├── about.py        # 'About' dialog class
-│   ├── config.py       # Configuration management
-│   ├── db.py           # Database connection and operations
-│   ├── help.py         # 'Help' dialog class
-│   ├── log_viewer.py   # Log viewing interface
-│   ├── menu.py         # Application menu class
-│   ├── options.py      # Settings dialog
-│   ├── sponsor.py      # 'Sponsor' dialog class
-│   ├── updates.py      # Update checking functionality
-│   └── __init__.py     # Makes 'struttura' a package
-├── main.py             # Main application entry point
-├── requirements.txt    # Project dependencies
-├── README.md           # This file
-├── CHANGELOG.md        # Project version history
-├── TO_DO.md            # Development to-do list
-└── mysql_config.json   # MySQL configuration file
+├── 📁 logs/                # Application logs
+│   └── 📄 app.log
+├── 📁 struttura/           # Core application package
+│   ├── ℹ️ about.py        # 'About' dialog class
+│   ├── ⚙️ config.py      # Configuration management
+│   ├── 💾 db.py           # Database connection and operations
+│   ├── ❓ help.py         # 'Help' dialog class
+│   ├── 📊 log_viewer.py   # Log viewing interface
+│   ├── 🍔 menu.py         # Application menu class
+│   ├� options.py      # Settings dialog
+│   ├── 💝 sponsor.py      # 'Sponsor' dialog class
+│   ├── 🔄 updates.py      # Update checking functionality
+│   └── __init__.py     # Package initialization
+├── 🚀 main.py             # Main application entry point
+├── 📋 requirements.txt    # Project dependencies
+├── 📖 README.md          # This file
+├── 📜 CHANGELOG.md       # Project version history
+├── ✅ TO_DO.md           # Development to-do list
+└── ⚙️ mysql_config.json  # MySQL configuration file
+```
 
-## Setup and Installation
+## 🚀 Getting Started
 
-1.  **Clone the repository:**
-    ```sh
-    git clone https://github.com/Nsfr750/movie_catalog.git
-    cd movie_catalog
-    ```
+### Prerequisites
 
-2.  **Install dependencies:**
-    Make sure you have Python 3 installed. Then, install the required packages using pip:
-    ```sh
-    pip install -r requirements.txt
-    ```
+- Python 3.8 or higher
+- MySQL Server
+- Git (for development)
 
-3.  **Configure Database:**
-    - Make sure MySQL Server is installed and running
-    - Run the application and use the Database menu to configure your MySQL connection
+### Installation
 
-4.  **Run the application:**
-    ```sh
-    python main.py
-    ```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Nsfr750/movie_catalog.git
+   cd movie_catalog
+   ```
 
-## Usage
+2. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-1. **Add Movies:**
-   - Click 'Browse' to select a directory containing your movies
-   - Click 'Scan for Movies' to add them to your catalog
+3. **Configure MySQL**
+   - Create a new MySQL database
+   - Copy `mysql_config.example.json` to `mysql_config.json`
+   - Update the database credentials in `mysql_config.json`
 
-2. **View Movies:**
-   - Your movies will be displayed in the main window
-   - Use the 'Load Database' button to refresh the view
+4. **Run the application**
+   ```bash
+   python main.py
+   ```
 
-3. **Export Data:**
-   - Click 'Export to CSV' to save your movie catalog to a file
-
-4. **Change Language:**
-   - Use the Language menu to switch between English and Italian
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
+## 📝 License
 
 This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
 
-## Support
+## 🙏 Support
 
-If you find this project useful, please consider supporting it through:
-- [GitHub Sponsors](https://github.com/sponsors/Nsfr750)
-- [Buy Me a Coffee](https://paypal.me/3dmega)
-- [Patreon](https://www.patreon.com/Nsfr750)
-- [Discord](https://discord.gg/BvvkUEP9)
+If you find this project useful, consider supporting its development:
 
-## Version History
+[![GitHub Sponsors](https://img.shields.io/badge/Support%20on-GitHub%20Sponsors-ea4aaa?style=for-the-badge&logo=github-sponsors&logoColor=white)](https://github.com/sponsors/Nsfr750)
+[![PayPal](https://img.shields.io/badge/Donate-PayPal-blue?style=for-the-badge&logo=paypal)](https://www.paypal.com/donate?hosted_button_id=YOUR_PAYPAL_BUTTON_ID)
 
-See [CHANGELOG.md](CHANGELOG.md) for a complete version history.
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+## 📬 Contact
+
+For questions or feedback, please open an issue or contact [Nsfr750](https://github.com/Nsfr750).
