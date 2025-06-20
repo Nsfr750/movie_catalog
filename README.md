@@ -1,6 +1,6 @@
 # Movie Catalog
 
-**Version: 1.7.0**
+**Version: 1.7.1**
 
 A modern Python GUI application for managing and cataloging your movie collection, built with Tkinter and MySQL.
 
