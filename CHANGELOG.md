@@ -1,24 +1,24 @@
-# Changelog
+# 📋 Changelog
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Added
+###🆕 Added
 - **Update System**: Added automatic update checking with GitHub integration
 - **Settings Dialog**: New tabbed settings dialog for application configuration
 - **Logging System**: Comprehensive logging with log viewer interface
 - **Configuration Management**: Persistent application settings storage
 
-### Fixed
+### 🐛Fixed
 - Fixed sponsor dialog close button functionality
 - Resolved duplicate tree view creation issue
 - Fixed language switching for all UI elements
 - Improved error handling in database operations
 - Fixed circular import issues in package structure
 
-## [1.7.1] - 2025-06-20
-### Added
+## 🚀  [1.7.1] - 2025-06-20
+### 🆕 Added
 - **Update System**: Automatic version checking and update notifications
 - **Settings Dialog**: User-configurable application settings
   - Theme selection (Light/Dark/System)
