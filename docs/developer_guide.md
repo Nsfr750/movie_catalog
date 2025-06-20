@@ -1,5 +1,47 @@
 # Developer Guide
 
+This guide provides technical details about the project's architecture, code structure, and development practices.
+
+## Project Architecture
+
+The application follows a modular architecture, with a clear separation of concerns between the UI, core logic, and data layers.
+
+### Core Components
+
+- **`main.py`**: The main entry point of the application. It contains the `MovieCatalogApp` class which initializes the GUI and orchestrates the different components.
+
+- **`struttura` Package**: This is a central package containing the core backend logic and shared components.
+  - **`db.py`**: Manages all database interactions. The `MySQLDatabase` class handles connections, table creation, and CRUD operations.
+  - **`menu.py`**: The `AppMenu` class encapsulates all logic for creating and managing the application's menu bar.
+  - **`version.py`**: Provides version information for the application.
+  - **`about.py` / `help.py` / `sponsor.py`**: These modules contain the classes for their respective UI dialogs.
+
+- **`lang` Package**:
+  - **`lang.py`**: Handles localization. It contains dictionaries for English and Italian strings and functions to switch the language at runtime.
+
+### UI Layer
+
+- The user interface is built using Python's standard `tkinter` library, with the themed `ttk` widgets for a modern look and feel.
+- The main application window and its components are created in `main.py`.
+- Dialogs for 'About', 'Help', and 'Sponsor' are encapsulated in their own classes within the `struttura` package.
+
+### Data Layer
+
+- The application uses a MySQL database for persistent storage.
+- The `MySQLConfig` class in `struttura/db.py` handles loading and saving the database connection configuration from a `mysql_config.json` file.
+- All SQL queries are managed within the `MySQLDatabase` class.
+
+## Development Workflow
+
+1.  **Code Style**: The project uses `black` for code formatting to ensure consistency.
+2.  **Dependencies**: Project dependencies are managed in `requirements.txt`.
+3.  **Branching**: Follow standard Git branching practices (e.g., feature branches for new development).
+4.  **Documentation**: Keep the documentation in the `/docs` folder updated with any significant changes.
+
+## How to Contribute
+
+- See `CONTRIBUTING.md` for detailed guidelines on how to contribute to the project.
+
 ## Project Structure
 
 ```
@@ -7,32 +49,19 @@ movie_catalog/
 ├── docs/              # Documentation
 ├── src/              # Source code
 │   ├── main.py       # Main application
-│   ├── db.py         # Database operations
-│   └── help.py       # Help system
+│   ├── struttura/    # Core backend logic and shared components
+│   │   ├── db.py     # Database operations
+│   │   ├── menu.py   # Application menu
+│   │   ├── version.py # Version information
+│   │   ├── about.py  # About dialog
+│   │   ├── help.py   # Help dialog
+│   │   └── sponsor.py # Sponsor dialog
+│   └── lang/         # Localization
+│       └── lang.py   # Localization logic
 ├── tests/            # Test files
 ├── requirements.txt  # Project dependencies
 └── setup.py          # Package configuration
 ```
-
-## Core Components
-
-### Database System
-- Uses MySQL as backend
-- Provides configuration dialog
-- Supports database migrations
-- Implements error handling
-
-### GUI Components
-- Built with tkinter
-- Uses ttk for modern look
-- Implements status updates
-- Supports multiple dialogs
-
-### File Handling
-- Supports multiple video formats
-- Implements progress tracking
-- Handles large file collections
-- Provides error recovery
 
 ## Development Setup
 

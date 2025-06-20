@@ -1,130 +1,94 @@
 # API Reference
 
-## Database API
+This document provides a reference for the core classes and functions in the Movie Catalog application.
 
-### Database Class
+## `main.MovieCatalogApp`
 
-```python
-class Database:
-    def __init__(self, root):
-        """Initialize the database with a root window reference.
-        
-        Args:
-            root (tk.Tk): The root Tkinter window
-        """
-        
-    def initialize(self) -> bool:
-        """Initialize the database connection.
-        
-        Returns:
-            bool: True if initialization was successful, False otherwise
-        """
-        
-    def add_movie(self, genre: str, movie_name: str, path: str) -> bool:
-        """Add a movie to the database.
-        
-        Args:
-            genre (str): Movie genre
-            movie_name (str): Movie name
-            path (str): Full path to the movie file
-            
-        Returns:
-            bool: True if movie was added successfully, False otherwise
-        """
-        
-    def get_all_movies(self) -> List[Tuple[str, str, str]]:
-        """Get all movies from the database.
-        
-        Returns:
-            List[Tuple[str, str, str]]: List of tuples containing (genre, movie_name, path)
-        """
-        
-    def export_to_csv(self, filename: str) -> bool:
-        """Export movies to CSV file.
-        
-        Args:
-            filename (str): Path to the CSV file
-            
-        Returns:
-            bool: True if export was successful, False otherwise
-        """
+The main application class that orchestrates the GUI and all backend components.
 
-### MovieScanner Class
+- `__init__(self, root)`: Initializes the main application window, database, and UI components.
+- `set_language(self, lang_code)`: Sets the application language and triggers a UI text update.
+- `update_ui_texts(self)`: Updates all text in the UI to the currently selected language.
+- `create_widgets(self)`: Creates all the main GUI components.
+- `browse_directory(self)`: Opens a dialog to select the movie directory.
+- `scan_movies(self)`: Starts the movie scanning process in a separate thread.
+- `load_movies_from_db(self)`: Loads and displays all movies from the database.
+- `export_to_csv(self)`: Exports the movie list to a CSV file.
 
-```python
-class MovieScanner:
-    def __init__(self, root_path: str, queue: Queue):
-        """Initialize the movie scanner.
-        
-        Args:
-            root_path (str): Root directory to scan
-            queue (Queue): Queue for communication with GUI
-        """
-        
-    def scan(self) -> None:
-        """Scan the directory for movies.
-        
-        Scans the root directory and all subdirectories for supported video files.
-        Progress is reported through the queue.
-        """
+## `struttura.menu.AppMenu`
 
-## GUI Components
+Handles the creation and management of the application's menu bar.
 
-### MovieCatalogApp Class
+- `__init__(self, app)`: Initializes the menu and links it to the main app.
+- `create_menu(self)`: Creates the File, Language, and Help menus.
+- `update_menu_text(self)`: Updates the text of all menu items when the language changes.
+- `show_about_dialog(self)`: Displays the 'About' dialog.
+- `show_help_dialog(self)`: Displays the 'Help' dialog.
+- `show_sponsor_dialog(self)`: Displays the 'Sponsor' dialog.
+
+## `struttura.db.MySQLDatabase`
+
+Manages all interactions with the MySQL database.
+
+- `__init__(self, root)`: Initializes the database configuration.
+- `create_connection(self)`: Establishes a connection to the database.
+- `create_tables(self)`: Creates the `movies` table if it doesn't exist.
+- `add_movie(self, genre, movie_name, path)`: Adds a single movie to the database.
+- `get_all_movies(self)`: Retrieves all movies from the database.
+- `store_scanned_files(self, files)`: Stores a batch of scanned movie files in the database.
+
+## `struttura.db.MySQLConfig`
+
+Manages the database connection settings.
+
+- `__init__(self, root)`: Loads the configuration from `mysql_config.json` or uses defaults.
+- `load_config(self)`: Loads the database configuration from the JSON file.
+- `save_config(self, config)`: Saves the current configuration to the JSON file.
+- `show_config_form(self)`: Displays a dialog for the user to edit the database configuration.
+
+## `lang.lang`
+
+Provides functions for localization.
+
+- `set_language(lang_code)`: Sets the active language ('en' or 'it').
+- `get_string(key)`: Retrieves a string for the given key in the active language.
+
+## API Usage Example
 
 ```python
-class MovieCatalogApp:
-    def __init__(self, root):
-        """Initialize the main application window.
-        
-        Args:
-            root (tk.Tk): The root Tkinter window
-        """
-        
-    def create_menu(self) -> None:
-        """Create the application menu."""
-        
-    def load_movies_from_database(self) -> None:
-        """Load movies from database into treeview."""
-        
-    def start_scan(self) -> None:
-        """Start scanning for movies."""
-        
-    def process_results(self) -> None:
-        """Process scan results and update GUI."""
-        
-    def export_to_csv(self) -> None:
-        """Export movies to CSV file."""
+# Initialize application
+app = MovieCatalogApp(root)
 
-## Configuration
+# Configure database
+db_config = MySQLConfig(root)
+config = db_config.show_config_form()
+if config:
+    db_config.save_config(config)
 
-### MySQLConfig Class
+# Start movie scanning
+scanner = MovieScanner(root_path="/path/to/movies", queue=app.result_queue)
+scanner.scan()
 
-```python
-class MySQLConfig:
-    def __init__(self, root=None):
-        """Initialize MySQL configuration.
-        
-        Args:
-            root (tk.Tk, optional): The root Tkinter window
-        """
-        
-    def show_config_form(self) -> dict:
-        """Show configuration dialog and return settings.
-        
-        Returns:
-            dict: Database configuration settings
-        """
-        
-    def save_config(self, config: dict) -> bool:
-        """Save configuration to file.
-        
-        Args:
-            config (dict): Configuration settings
-            
-        Returns:
-            bool: True if save was successful, False otherwise
-        """
+# Export to CSV
+app.export_to_csv("movies.csv")
+```
+
+## Supported File Formats
+
+The application supports the following video file formats:
+
+- .mp4 (MPEG-4)
+- .mkv (Matroska)
+- .avi (Audio Video Interleave)
+- .mov (QuickTime)
+- .webm (WebM)
+- .mpg (MPEG-1)
+- .mpeg (MPEG)
+- .wmv (Windows Media Video)
+- .flv (Flash Video)
+- .m4v (MPEG-4 Video)
+- .vob (Video Object)
+- .divx (DivX)
 
 ## Error Handling
 
@@ -150,40 +114,3 @@ class UnsupportedFormat(FileError):
     
 class PermissionError(FileError):
     """File permission error."""
-
-## Supported File Formats
-
-The application supports the following video file formats:
-
-- .mp4 (MPEG-4)
-- .mkv (Matroska)
-- .avi (Audio Video Interleave)
-- .mov (QuickTime)
-- .webm (WebM)
-- .mpg (MPEG-1)
-- .mpeg (MPEG)
-- .wmv (Windows Media Video)
-- .flv (Flash Video)
-- .m4v (MPEG-4 Video)
-- .vob (Video Object)
-- .divx (DivX)
-
-## API Usage Example
-
-```python
-# Initialize application
-app = MovieCatalogApp(root)
-
-# Configure database
-db_config = MySQLConfig(root)
-config = db_config.show_config_form()
-if config:
-    db_config.save_config(config)
-
-# Start movie scanning
-scanner = MovieScanner(root_path="/path/to/movies", queue=app.result_queue)
-scanner.scan()
-
-# Export to CSV
-app.export_to_csv("movies.csv")
-```

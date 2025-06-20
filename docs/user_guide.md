@@ -14,6 +14,12 @@
 - **About**: Show application information
 - **Sponsor**: Support the project
 
+### Language Menu
+- **Switch Language**: This menu allows you to change the application's display language at any time.
+    - Click **Language** in the menu bar.
+    - Select **English** or **Italiano**.
+    - The entire user interface will instantly update to the selected language.
+
 ### Main Window Components
 
 #### Directory Selection

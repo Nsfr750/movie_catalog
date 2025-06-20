@@ -1,131 +1,49 @@
-# Getting Started with Movie Catalog
+# Getting Started
 
-## System Requirements
+This guide will walk you through setting up the Movie Catalog application on your local machine.
+
+## Prerequisites
 
 - Python 3.8 or higher
-- MySQL 8.0 or higher
-- Windows or Linux operating system
+- `pip` for installing packages
+- A running MySQL server instance
 
 ## Installation
 
-### From Source
+1.  **Clone the Repository**
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/Nsfr750/movie_catalog.git
-   cd movie_catalog
-   ```
+    Open your terminal or command prompt and clone the project from GitHub:
 
-2. Install in development mode:
-   ```bash
-   pip install -e .
-   ```
+    ```sh
+    git clone https://github.com/Nsfr750/movie_catalog.git
+    cd movie_catalog
+    ```
 
-3. Configure MySQL:
-   - Ensure MySQL is installed and running
-   - Create a user with appropriate permissions
-   - Note down the connection details (host, username, password)
+2.  **Install Dependencies**
 
-4. Run the application:
-   ```bash
-   movie-catalog
-   ```
+    Install the required Python packages using the `requirements.txt` file. This will install `mysql-connector-python` and `Pillow`.
 
-### From PyPI
+    ```sh
+    pip install -r requirements.txt
+    ```
 
-1. Install from PyPI:
-   ```bash
-   pip install movie-catalog
-   ```
+## Initial Configuration
 
-2. Run the application:
-   ```bash
-   movie-catalog
-   ```
+1.  **Database Setup**
 
-## Development Setup
+    On the very first launch, the application will automatically prompt you to configure the connection to your MySQL database. You will need to provide:
 
-For development, install the package with development dependencies:
+    - **Host**: The address of your MySQL server (e.g., `localhost`).
+    - **User**: Your MySQL username (e.g., `root`).
+    - **Password**: Your MySQL password.
+    - **Database**: The name for the movie catalog database (e.g., `movie_catalog`). The application will create the database if it does not exist.
 
-```bash
-pip install -e ".[dev]"
-```
+2.  **Running the Application**
 
-This will install all required development tools including:
-- Code formatters (black, isort)
-- Linters (flake8, pylint)
-- Type checking (mypy)
-- Testing tools (pytest, pytest-cov)
-- Documentation tools (sphinx)
+    Once the dependencies are installed, you can run the application from the project's root directory:
 
-### Running Tests
+    ```sh
+    python main.py
+    ```
 
-To run the test suite:
-
-```bash
-pytest tests/
-```
-
-### Building Documentation
-
-To build the documentation:
-
-```bash
-sphinx-build -b html docs/ docs/_build/html
-```
-
-The built documentation will be available in `docs/_build/html/`
-
-## Initial Setup
-
-1. Database Configuration:
-   - Launch the application
-   - Click "Database" in the menu
-   - Configure your MySQL connection:
-     - Host (default: localhost)
-     - Username (default: root)
-     - Password
-     - Database name (default: movie_catalog)
-   - Click "Save" to apply the configuration
-
-2. Movie Directory Organization:
-   The application expects movies to be organized in a folder structure like:
-   ```
-   movies/
-   ├── Action/
-   │   ├── ActionMovie1.mkv
-   │   └── ActionMovie2.mp4
-   ├── Comedy/
-   │   ├── ComedyMovie1.mkv
-   └── Drama/
-       └── DramaMovie1.mp4
-   ```
-
-## Basic Usage
-
-1. Create or Open Database:
-   - Click "Database" in the menu
-   - Choose "New Database" or "Open Database"
-   - Follow the configuration wizard
-
-2. Scan Movies:
-   - Click "Browse" to select your movie directory
-   - Click "Scan Movies" to start scanning
-   - Progress will be shown in the progress bar
-   - Status updates will appear in the status bar
-
-## Supported Video Formats
-
-The application supports the following video file formats:
-- .mp4 (MPEG-4)
-- .mkv (Matroska)
-- .avi (Audio Video Interleave)
-- .mov (QuickTime)
-- .webm (WebM)
-- .mpg (MPEG-1)
-- .mpeg (MPEG)
-- .wmv (Windows Media Video)
-- .flv (Flash Video)
-- .m4v (MPEG-4 Video)
-- .vob (Video Object)
-- .divx (DivX)
+The main application window should now appear, ready for you to start cataloging your movies.
