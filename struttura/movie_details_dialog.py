@@ -76,7 +76,7 @@ class MovieDetailsDialog(tk.Toplevel):
         try:
             # Initialize TMDB client (you'll need to get an API key)
             from struttura.movie_metadata import TMDBClient
-            client = TMDBClient(api_key="1139ab9202e3e8e5cc13de39efed791f")
+            client = TMDBClient(api_key="API_KEY")
             
             # Search for the movie
             self.metadata = client.get_metadata(query)
