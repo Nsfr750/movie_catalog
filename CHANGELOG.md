@@ -50,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved error messages
 - Fixed configuration loading/saving
 
-## [1.7.0] - 2025-06-20
+## [1.7.1] - 2025-06-20
 ### Added
 - **Multilingual Support**: Added dynamic language switching between English and Italian.
 - **Language Menu**: New menu for selecting the application language at runtime.
