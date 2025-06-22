@@ -1,6 +1,6 @@
 {
-    "host": "localhost",
-    "user": "root",
-    "password": "22243",
+    "host": "db-host",
+    "user": "db-user",
+    "password": "db-pw",
     "database": "movie_catalog"
 }
