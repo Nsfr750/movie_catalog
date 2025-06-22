@@ -68,30 +68,47 @@ A modern Python GUI application for managing and cataloging your movie collectio
 
 ```markdown
 movie_catalog/
+├── 📁 docs/                 # Project documentation
+│   ├── 📁 api_reference/    # API documentation
+│   ├── 📁 developer_guide/  # Developer documentation
+│   ├── 📁 user_guide/      # User documentation
+│   ├── 📄 faq.md           # Frequently Asked Questions
+│   └── 📄 troubleshooting.md # Troubleshooting guide
+│
 ├── 📁 lang/                 # Language files
-│   ├── 🌐 lang.py         # Handles language translations
+│   ├── 🌐 __init__.py      # Language module initialization
 │   ├── en.json            # English language file
 │   ├── it.json            # Italian language file
+│   └── lang.py            # Handles language translations
+│
 ├── 📁 logs/                # Application logs
-│   └── 📄 movie_catalog.log
+│   └── 📄 movie_catalog.log  # Log file
+│
 ├── 📁 struttura/           # Core application package
-│   ├── 📁 images/           # application images
+│   ├── 📁 images/           # Application images and icons
 │   │    └── icon.ico        # Application icon
+│   │
 │   ├── ℹ️ about.py        # 'About' dialog class
-│   ├── ⚙️ config.py      # Configuration management
-│   ├── 💾 db.py           # Database connection and operations
-│   ├── ❓ help.py         # 'Help' dialog class
-│   ├── 📊 log_viewer.py   # Log viewing interface
-│   ├── 📊 logger.py         # Logging configuration
-│   ├── 🍔 menu.py         # Application menu class
+│   ├── ⚙️ config.py        # Configuration management
+│   ├── 💾 create_database.py # Database initialization
+│   ├── 💾 db.py            # Database connection and operations
+│   ├── ❓ help.py          # 'Help' dialog class
+│   ├── 📊 log_viewer.py    # Log viewing interface
+│   ├── 📊 logger.py        # Logging configuration
+│   ├── 🍔 menu.py          # Application menu class
 │   ├── 🎬 movie_details_dialog.py  # Movie metadata dialog
-│   ├── 📽️ movie_metadata.py      # TMDB API integration
-│   ├── ⚙️ options.py     # Settings dialog
-│   ├── 💝 sponsor.py      # 'Sponsor' dialog class
-│   ├── 📊 traceback.py      # Traceback
-│   ├── 🔄 updates.py      # Update checking functionality
-│   ├── 📊 version.py      # Version information
-│   └── __init__.py     # Package initialization
+│   ├── 📽️ movie_metadata.py       # TMDB API integration
+│   ├── ⚙️ options.py      # Settings dialog
+│   ├── ❤️ sponsor.py      # Sponsor/donation dialog
+│   ├── 🐞 traceback.py    # Error handling and traceback
+│   ├── 💾 update_database.py # Database schema updates
+│   ├── 🔄 updates.py      # Application update system
+│   └── 🔢 version.py      # Version management
+│
+├── 📁 tests/              # Test files
+│   └── 📋 test_lang.py    # Language testing
+│
+├── 📄 .gitignore         # Git ignore file
 ├── 🚀 main.py            # Main application entry point
 ├── 📋 requirements.txt    # Project dependencies
 ├── 📖 README.md          # This file
