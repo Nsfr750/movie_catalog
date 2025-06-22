@@ -24,6 +24,7 @@
   "browse": "Browse...",
   "search": "Search...",
   "filter": "Filter",
+  "reset_filters": "Reset Filter",
   "db_config_failed": "Failed to configure database",
   "db_not_initialized": "Database not initialized",
   "db_created": "Database created successfully!",
@@ -108,6 +109,13 @@
   "documentation": "Documentation",
   "about": "About",
   "version": "Version",
+
+
+
+
+
+
+
   "failed_to_add_movie": "Failed to add movie to database.",
   "add_new_movie": "Add New Movie",
   "save_changes": "Save Changes",
@@ -280,6 +288,7 @@
   "visit_website": "Visit the project website for updates and news",
   "user_guide": "User Guide",
   "report_issues": "Report Issues",
+  "support": "Support",
   "support_options": "Support Options",
   "email": "Email",
   "github_issues": "GitHub Issues",
