@@ -316,41 +316,55 @@ class MySQLDatabase:
             conn.close()
             
     def get_all_movies(self, sort_by='title', sort_order='ASC'):
-        """Restituisce tutti i film dal database con ordinamento personalizzato"""
+        """
+        Recupera tutti i film dal database con ordinamento opzionale.
+        
+        Args:
+            sort_by (str): Campo per l'ordinamento (default: 'title')
+            sort_order (str): Direzione di ordinamento ('ASC' o 'DESC', default: 'ASC')
+            
+        Returns:
+            list: Lista di dizionari contenenti i dati dei film
+        """
+        # Mappa i nomi dei campi alle colonne del database
+        field_map = {
+            'id': 'id',
+            'title': 'title',
+            'year': 'year',
+            'genre': 'genre',
+            'rating': 'rating',
+            'runtime': 'runtime',
+            'path': 'path',
+            'movie_name': 'movie_name',
+            'director': 'director'
+        }
+        
+        # Verifica che il campo di ordinamento sia valido
+        sort_field = field_map.get(sort_by, 'title')
+        
+        # Verifica che l'ordine sia valido
+        sort_order = sort_order.upper()
+        if sort_order not in ('ASC', 'DESC'):
+            sort_order = 'ASC'
+        
+        # Costruisci la query con gestione dei valori NULL
+        query = f"""
+            SELECT * FROM movies 
+            ORDER BY 
+                CASE WHEN {sort_field} IS NULL OR {sort_field} = '' 
+                THEN 1 ELSE 0 END,
+                {sort_field} {sort_order},
+                movie_name {sort_order}
+        """
+        
         try:
-            # Mappa i nomi dei campi alle colonne del database
-            field_map = {
-                'id': 'id',
-                'title': 'title',
-                'year': 'year',
-                'genre': 'genre',
-                'rating': 'rating',
-                'runtime': 'runtime',
-                'path': 'path',
-                'movie_name': 'movie_name'
-            }
-            
-            # Imposta il campo di ordinamento predefinito se non valido
-            sort_field = field_map.get(sort_by, 'title')
-            
-            # Assicurati che l'ordine sia valido
-            sort_order = sort_order.upper()
-            if sort_order not in ('ASC', 'DESC'):
-                sort_order = 'ASC'
-            
-            # Costruisci la query con ordinamento dinamico
-            query = f"""
-                SELECT * FROM movies 
-                ORDER BY {sort_field} {sort_order}, 
-                         title {sort_order}
-            """
-            
             self.cursor.execute(query)
             return self.cursor.fetchall()
-            
         except Exception as e:
-            self.logger.error(f"Errore nel recupero dei film: {str(e)}")
-            raise
+            self.logger.error(f"Errore durante il recupero dei film: {str(e)}")
+            # In caso di errore, torna a un ordinamento di default
+            self.cursor.execute("SELECT * FROM movies ORDER BY movie_name ASC")
+            return self.cursor.fetchall()
             
     def store_scanned_files(self, files):
         """
