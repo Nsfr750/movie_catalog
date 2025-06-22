@@ -70,27 +70,35 @@ A modern Python GUI application for managing and cataloging your movie collectio
 movie_catalog/
 ├── 📁 lang/                 # Language files
 │   ├── 🌐 lang.py         # Handles language translations
-│   └── __init__.py
+│   ├── en.json            # English language file
+│   ├── it.json            # Italian language file
 ├── 📁 logs/                # Application logs
-│   └── 📄 app.log
+│   └── 📄 movie_catalog.log
 ├── 📁 struttura/           # Core application package
+│   ├── 📁 images/           # application images
+│   │    └── icon.ico        # Application icon
 │   ├── ℹ️ about.py        # 'About' dialog class
 │   ├── ⚙️ config.py      # Configuration management
 │   ├── 💾 db.py           # Database connection and operations
 │   ├── ❓ help.py         # 'Help' dialog class
 │   ├── 📊 log_viewer.py   # Log viewing interface
+│   ├── 📊 logger.py         # Logging configuration
 │   ├── 🍔 menu.py         # Application menu class
 │   ├── 🎬 movie_details_dialog.py  # Movie metadata dialog
 │   ├── 📽️ movie_metadata.py      # TMDB API integration
 │   ├── ⚙️ options.py     # Settings dialog
 │   ├── 💝 sponsor.py      # 'Sponsor' dialog class
+│   ├── 📊 traceback.py      # Traceback
 │   ├── 🔄 updates.py      # Update checking functionality
+│   ├── 📊 version.py      # Version information
 │   └── __init__.py     # Package initialization
-├── 🚀 main.py             # Main application entry point
+├── 🚀 main.py            # Main application entry point
 ├── 📋 requirements.txt    # Project dependencies
 ├── 📖 README.md          # This file
 ├── 📜 CHANGELOG.md       # Project version history
 ├── ✅ TO_DO.md           # Development to-do list
+├── ⚙️ settings.json      # Application settings
+├── ⚙️ updates.json       # Update information
 └── ⚙️ mysql_config.json  # MySQL configuration file
 ```
 
