@@ -3,7 +3,13 @@
 API Reference
 =============
 
-This section contains detailed documentation for the Movie Catalog API.
+This section contains the complete API reference for Movie Catalog v1.9.0, including all public modules,
+classes, and functions.
+
+.. contents:: Table of Contents
+   :depth: 3
+   :local:
+   :backlinks: top
 
 .. toctree::
    :maxdepth: 2
@@ -12,22 +18,34 @@ This section contains detailed documentation for the Movie Catalog API.
    modules
 
 Core Modules
------------
+------------
 
+Movie Metadata Module
+~~~~~~~~~~~~~~~~~~~~~
 .. automodule:: struttura.movie_metadata
    :members:
    :undoc-members:
    :show-inheritance:
    :exclude-members: __weakref__, __dict__, __module__
+   :member-order: bysource
 
+Database Module
+~~~~~~~~~~~~~~~
 .. automodule:: struttura.db
    :members:
    :undoc-members:
    :show-inheritance:
    :exclude-members: __weakref__, __dict__, __module__
+   :member-order: bysource
 
+Configuration Module
+~~~~~~~~~~~~~~~~~~~
 .. automodule:: struttura.config
    :members:
+   :undoc-members:
+   :show-inheritance:
+   :exclude-members: __weakref__, __dict__, __module__
+   :member-order: bysource
    :undoc-members:
    :show-inheritance:
    :exclude-members: __weakref__, __dict__, __module__

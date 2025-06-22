@@ -5,6 +5,11 @@ User Guide
 
 This guide provides detailed information about using Movie Catalog's features and functionality.
 
+.. contents:: Table of Contents
+   :depth: 3
+   :local:
+   :backlinks: top
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -15,6 +20,9 @@ This guide provides detailed information about using Movie Catalog's features an
    preferences
    keyboard_shortcuts
    advanced_features
+
+.. note::
+   This documentation is for Movie Catalog v1.9.0. Some features may differ in other versions.
 
 Interface Overview
 -----------------

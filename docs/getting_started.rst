@@ -5,29 +5,86 @@ Getting Started
 
 This guide will help you get started with Movie Catalog, a powerful application for managing your movie collection with TMDB integration.
 
+.. contents:: Table of Contents
+   :depth: 3
+   :local:
+   :backlinks: top
+
+System Requirements
+------------------
+
+- **Operating System**: Windows 10/11, macOS 10.15+, or Linux
+- **Python**: 3.8 or higher
+- **Database**: MySQL 8.0+ or MariaDB 10.5+
+- **Memory**: 4GB RAM minimum, 8GB recommended
+- **Disk Space**: 500MB free space (plus space for your movie collection)
+
+Prerequisites
+-------------
+
+1. **Python**
+   - Download and install the latest Python 3.8+ from `python.org <https://www.python.org/downloads/>`_
+   - During installation, make sure to check "Add Python to PATH"
+
+2. **MySQL/MariaDB**
+   - Install `MySQL Community Server <https://dev.mysql.com/downloads/mysql/>`_ or `MariaDB <https://mariadb.org/download/>`_
+   - Note down your database credentials (username and password)
+
+3. **TMDB API Key** (Optional but recommended)
+   - Create an account at `The Movie Database <https://www.themoviedb.org/>`_
+   - Request an API key from your account settings
+   - This key will be used to fetch movie metadata automatically
+
 Installation
 ------------
 
-Prerequisites
-~~~~~~~~~~~~~
-
-- Python 3.8 or higher
-- MySQL Server
-- TMDB API key (for movie metadata)
-
-Installation Steps
-~~~~~~~~~~~~~~~~~~
-
-1. Clone the repository:
+1. **Clone the repository**
 
    .. code-block:: bash
 
       git clone https://github.com/Nsfr750/movie_catalog.git
       cd movie_catalog
 
-2. Install the required dependencies:
+2. **Install dependencies**
 
    .. code-block:: bash
+
+      pip install -r requirements.txt
+
+3. **Database Setup**
+
+   - Create a new MySQL database for Movie Catalog
+   - Run the initialization script:
+
+   .. code-block:: bash
+
+      python -m struttura.create_database
+
+4. **Configuration**
+
+   - Copy `.env.example` to `.env`
+   - Edit `.env` with your database credentials and TMDB API key
+
+5. **Run the Application**
+
+   .. code-block:: bash
+
+      python main.py
+
+First Run
+---------
+
+On first launch, Movie Catalog will:
+
+1. Create the necessary database tables
+2. Set up the default configuration
+3. Create a log file in the `logs` directory
+
+.. note::
+   Make sure your MySQL server is running before starting the application.
+
+.. tip::
+   For troubleshooting, check the log file at ``logs/movie_catalog.log`` if you encounter any issues during startup.
 
       pip install -r requirements.txt
 

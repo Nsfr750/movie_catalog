@@ -6,7 +6,7 @@ including the main application class, database handling, and UI components.
 """
 
 # Version information
-__version__ = "1.7.1"
+__version__ = "1.9.0"
 __author__ = "Nsfr750"
 __email__ = "nsfr750@yandex.com"
 __license__ = "GPL-3.0"
