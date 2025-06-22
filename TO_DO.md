@@ -1,6 +1,11 @@
 # 📋 To-Do List
 
 ## ✅ Completed
+- [x] 🌍 Fixed language file validation and loading issues
+- [x] 🔍 Improved search functionality to handle different data formats
+- [x] 🛠️ Fixed database connection handling
+- [x] 📝 Updated project documentation
+- [x] 🐛 Resolved 'tuple' object has no attribute 'get' error
 - [x] 🏗️ Refactor core modules into a `struttura` package
 - [x] 🍔 Encapsulate menu logic in a separate `AppMenu` class
 - [x] 🌐 Implement multilingual support (English/Italian)
@@ -27,7 +32,6 @@
 - [x] 🔄 Fix MySQL connection and schema initialization
 
 ## 🚧 In Progress
-- [ ] 🧪 Comprehensive testing of all application features
 - [ ] ⚡ Performance optimization for large movie collections
 - [ ] 🧪 Add unit tests for new features
 - [ ] 📊 Implement caching for TMDB API responses

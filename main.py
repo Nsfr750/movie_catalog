@@ -142,6 +142,8 @@ class Database:
             print(f"Error storing scanned files: {e}")
             return False
             
+
+    
     def add_movie_with_metadata(self, title, year, path, poster_url, backdrop_url, overview,
                             rating, runtime, director, cast, genres, imdb_id):
         """
@@ -598,15 +600,29 @@ class MovieCatalogApp:
             self.tree.heading("path", text=lang.get_string('path'))
         
         # Update status
-        if hasattr(self, 'status_frame'):
-            self.status_frame.config(text=lang.get_string('ready'))
+        if hasattr(self, 'status_label'):
+            self.status_label.config(text=lang.get_string('ready'))
+        elif hasattr(self, 'status_frame'):
+            # For backward compatibility, try to find a label in the status frame
+            for widget in self.status_frame.winfo_children():
+                if isinstance(widget, (ttk.Label, tk.Label)):
+                    widget.config(text=lang.get_string('ready'))
+                    break
 
     def load_movies_from_database(self, search_term=None):
         """Carica i film dal database con i filtri e l'ordinamento correnti"""
         try:
             # Ottieni i parametri di ordinamento
-            sort_field = getattr(self, 'sort_by', tk.StringVar(value='title')).get()
-            sort_order = getattr(self, 'sort_order', tk.StringVar(value='ASC')).get()
+            sort_by_var = getattr(self, 'sort_by', tk.StringVar(value='title'))
+            sort_order_var = getattr(self, 'sort_order', tk.StringVar(value='ASC'))
+            
+            # Estrai i valori, gestendo sia StringVar che tuple
+            sort_field = sort_by_var.get() if hasattr(sort_by_var, 'get') else sort_by_var
+            sort_order = sort_order_var.get() if hasattr(sort_order_var, 'get') else sort_order_var
+            
+            # Assicurati che i valori siano stringhe
+            sort_field = str(sort_field) if sort_field is not None else 'title'
+            sort_order = str(sort_order) if sort_order is not None else 'ASC'
             
             # Stampa di debug
             print(f"Ordinamento richiesto: campo={sort_field}, ordine={sort_order}")
@@ -617,14 +633,33 @@ class MovieCatalogApp:
             # Filtra i film in base al termine di ricerca se specificato
             if search_term and search_term.strip():
                 search_term = search_term.lower().strip()
-                movies = [
-                    m for m in movies 
-                    if search_term in (m.get('title', '') or '').lower() or 
-                       search_term in (m.get('movie_name', '') or '').lower() or
-                       search_term in (m.get('genre', '') or '').lower() or
-                       search_term in (m.get('director', '') or '').lower() or
-                       str(m.get('year', '') or '').startswith(search_term)
-                ]
+                
+                def movie_matches(movie):
+                    # Handle both dictionary and tuple/list formats
+                    if isinstance(movie, dict):
+                        return (
+                            search_term in (movie.get('title', '') or '').lower() or
+                            search_term in (movie.get('movie_name', '') or '').lower() or
+                            search_term in (movie.get('genre', '') or '').lower() or
+                            search_term in (movie.get('director', '') or '').lower() or
+                            str(movie.get('year', '') or '').startswith(search_term)
+                        )
+                    elif isinstance(movie, (tuple, list)):
+                        # Assuming order is: id, genre, movie_name, title, year, path, ...
+                        title = movie[3] if len(movie) > 3 else ''
+                        movie_name = movie[2] if len(movie) > 2 else ''
+                        genre = movie[1] if len(movie) > 1 else ''
+                        year = str(movie[4]) if len(movie) > 4 and movie[4] is not None else ''
+                        
+                        return (
+                            search_term in (title or '').lower() or
+                            search_term in (movie_name or '').lower() or
+                            search_term in (genre or '').lower() or
+                            year.startswith(search_term)
+                        )
+                    return False
+                
+                movies = [m for m in movies if movie_matches(m)]
             
             # Aggiorna la vista ad albero
             self._update_treeview(movies)
@@ -697,6 +732,12 @@ class MovieCatalogApp:
             self.main_frame = ttk.Frame(self.root)
             self.main_frame.pack(fill='both', expand=True, padx=5, pady=5)
             
+            # Crea la barra degli strumenti
+            self._create_actions_frame()
+            
+            # Crea la barra di ricerca
+            self._create_search_frame()
+            
             # Crea i controlli di ordinamento
             self._create_sort_controls()
             
@@ -735,6 +776,41 @@ class MovieCatalogApp:
         self.browse_btn = ttk.Button(self.dir_frame, text=lang.get_string('browse'), command=self.browse_directory)
         self.browse_btn.pack(side='left', padx=5, pady=5)
 
+    def _create_search_frame(self):
+        """Create search frame with search box and button"""
+        self.search_frame = ttk.Frame(self.main_frame)
+        self.search_frame.pack(fill='x', padx=10, pady=5)
+        
+        # Search label
+        ttk.Label(self.search_frame, text=lang.get_string('search') + ":").pack(side=tk.LEFT, padx=(0, 5))
+        
+        # Search entry
+        self.search_var = tk.StringVar()
+        self.search_entry = ttk.Entry(self.search_frame, textvariable=self.search_var, width=50)
+        self.search_entry.pack(side=tk.LEFT, fill='x', expand=True, padx=5)
+        self.search_entry.bind('<Return>', self.on_search)
+        
+        # Search button
+        search_btn = ttk.Button(
+            self.search_frame,
+            text=lang.get_string('search_button'),
+            command=self.on_search
+        )
+        search_btn.pack(side=tk.LEFT, padx=5)
+        
+        # Clear button
+        clear_btn = ttk.Button(
+            self.search_frame,
+            text=lang.get_string('clear'),
+            command=self.clear_search
+        )
+        clear_btn.pack(side=tk.LEFT, padx=5)
+    
+    def clear_search(self):
+        """Clear the search box and reset the view"""
+        self.search_var.set('')
+        self.load_movies_from_database()
+        
     def _create_actions_frame(self):
         """Create actions frame with buttons"""
         self.actions_frame = ttk.LabelFrame(self.main_frame, text=lang.get_string('actions'))
@@ -764,10 +840,18 @@ class MovieCatalogApp:
         )
         self.import_btn.pack(side=tk.LEFT, padx=5)
         
+        # Add Movie button
+        self.add_movie_btn = ttk.Button(
+            self.actions_frame,
+            text=lang.get_string('add_movie'),
+            command=self._add_movie_with_metadata
+        )
+        self.add_movie_btn.pack(side=tk.LEFT, padx=5)
+        
         # Load button
         self.load_btn = ttk.Button(
             self.actions_frame,
-            text=lang.get_string('load_db'),
+            text=lang.get_string('refresh'),
             command=self.load_movies_from_database
         )
         self.load_btn.pack(side=tk.LEFT, padx=5)
@@ -865,6 +949,49 @@ class MovieCatalogApp:
     
     def update_movie_count(self, count):
         """Aggiorna il contatore dei film nella barra di stato"""
+        if hasattr(self, 'movie_count_label'):
+            self.movie_count_label.config(text=f"{count} {lang.get_string('movies')}")
+    
+    def _update_treeview(self, movies):
+        """Update the treeview with the given list of movies"""
+        # Clear existing items
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+        
+        # Add movies to the treeview
+        for movie in movies:
+            if isinstance(movie, dict):
+                # Handle dictionary format
+                values = (
+                    movie.get('id', ''),
+                    movie.get('genre', ''),
+                    movie.get('movie_name', ''),
+                    movie.get('title', ''),
+                    movie.get('year', ''),
+                    movie.get('path', '')
+                )
+            elif isinstance(movie, (tuple, list)):
+                # Handle tuple/list format
+                # Assuming order is: id, genre, movie_name, title, year, path, ...
+                values = (
+                    movie[0] if len(movie) > 0 else '',  # id
+                    movie[1] if len(movie) > 1 else '',  # genre
+                    movie[2] if len(movie) > 2 else '',  # movie_name
+                    movie[3] if len(movie) > 3 else '',  # title
+                    movie[4] if len(movie) > 4 else '',  # year
+                    movie[5] if len(movie) > 5 else ''   # path
+                )
+            else:
+                # Skip invalid movie format
+                continue
+                
+            self.tree.insert('', 'end', values=values)
+        
+        # Update the movie count
+        self._update_movie_count(len(movies))
+    
+    def _update_movie_count(self, count):
+        """Update the movie count in the status bar"""
         if hasattr(self, 'movie_count_label'):
             self.movie_count_label.config(text=f"{count} {lang.get_string('movies')}")
     

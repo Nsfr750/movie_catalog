@@ -4,6 +4,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=for-the-badge)](https://github.com/Nsfr750/movie_catalog/graphs/commit-activity)
+[![Last Commit](https://img.shields.io/github/last-commit/Nsfr750/movie_catalog?style=for-the-badge)](https://github.com/Nsfr750/movie_catalog/commits/main)
 
 A modern Python GUI application for managing and cataloging your movie collection, built with Tkinter and MySQL.
 
@@ -18,7 +19,8 @@ A modern Python GUI application for managing and cataloging your movie collectio
   - 🏷️ Genres and release years
 - 💾 **Database Integration**: Store your movie collection in a MySQL database with comprehensive metadata support.
 - 🎨 **Dynamic UI**: A clean and responsive user interface built with `tkinter.ttk`.
-- 🌐 **Multilingual Support**: Switch between English and Italian at runtime.
+- 🌐 **Multilingual Support**: Switch between English and Italian at runtime with complete UI translation.
+- 🔍 **Advanced Search**: Powerful search functionality that works across all movie attributes.
 - 🔄 **Automatic Updates**: Check for and install application updates.
 - ⚙️ **Configurable Settings**: Customize application behavior through a settings dialog.
 - 📝 **Logging**: Comprehensive logging system with configurable log levels.

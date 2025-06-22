@@ -8,10 +8,10 @@ for the project.
 # Version information follows Semantic Versioning 2.0.0 (https://semver.org/)
 VERSION_MAJOR = 1
 VERSION_MINOR = 8
-VERSION_PATCH = 0
+VERSION_PATCH = 2
 
 # Additional version qualifiers
-VERSION_QUALIFIER = 'alpha'  # Could be 'alpha', 'beta', 'rc', or ''
+VERSION_QUALIFIER = 'beta'  # Could be 'alpha', 'beta', 'rc', or ''
 
 def get_version():
     """
