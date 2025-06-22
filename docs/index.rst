@@ -15,6 +15,9 @@ Welcome to Movie Catalog's documentation!
    api_reference/index
    contributing
    changelog
+   faq
+   troubleshooting
+   
 
 
 Indices and tables

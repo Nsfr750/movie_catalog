@@ -1,5 +1,4 @@
 {
-    // Main Application
     "app_title": "Movie Catalog",
     "file_menu": "File",
     "exit_menu": "Esci",
@@ -27,7 +26,6 @@
     "filter": "Filtra",
     "reset_filters": "Azzera Filtri",
     
-    // Database
     "db_config_failed": "Impossibile configurare il database",
     "db_not_initialized": "Database non inizializzato",
     "db_created": "Database creato con successo!",
@@ -46,7 +44,6 @@
     "create_new_db": "Vuoi creare un nuovo database?",
     "close_database": "Vuoi chiudere il database corrente?",
     
-    // Status Messages
     "operation_timed_out": "Timeout operazione. Il database potrebbe essere occupato. Riprovare.",
     "operation_failed_after_retries": "Operazione fallita dopo diversi tentativi",
     "connection_error": "Errore di connessione al database",
@@ -59,10 +56,9 @@
     "done": "Fatto!",
     "failed": "Fallito",
     "scanning": "Scansione in corso...",
-    "scan_complete": "Scansione completata",
+    "scan_complete_status": "Scansione completata",
     "settings_saved_message": "Impostazioni salvate con successo",
     
-    // Movie Management
     "movie_details": "Dettagli Film",
     "add_movie": "Aggiungi Film",
     "edit_movie": "Modifica Film",
@@ -76,7 +72,6 @@
     "select_movie": "Seleziona un film",
     "no_movie_selected": "Nessun film selezionato",
     
-    // Movie Fields
     "title": "Titolo",
     "director": "Regista",
     "year": "Anno",
@@ -101,7 +96,6 @@
     "actions": "Azioni",
     "select_image": "Seleziona Immagine",
     
-    // File Operations
     "file_not_found": "File non trovato",
     "invalid_file": "File non valido",
     "file_too_large": "File troppo grande",
@@ -115,7 +109,6 @@
     "file_saved": "File salvato con successo",
     "error_saving_file": "Errore nel salvataggio del file",
     
-    // Import/Export
     "import": "Importa",
     "export": "Esporta",
     "import_csv": "Importa da CSV",
@@ -136,7 +129,6 @@
     "missing_required_fields": "Campi obbligatori mancanti nel CSV: {fields}",
     "row_error": "Errore alla riga {row}: {error}",
     
-    // Scanning
     "scan_films": "Scansiona Film",
     "scan_directory": "Scansiona Cartella",
     "scan_failed": "Scansione fallita",
@@ -149,7 +141,6 @@
     "scan_in_progress": "Scansione in corso...",
     "scan_completed_with_errors": "Scansione completata con {count} errori",
     
-    // Logging
     "log_viewer": "Visualizzatore Log",
     "logging": "Log",
     "log_level": "Livello Log",
@@ -165,7 +156,6 @@
     "select_all": "Seleziona Tutto",
     "clear_display": "Pulisci Schermata",
     
-    // Settings
     "settings": "Impostazioni",
     "preferences": "Preferenze",
     "general": "Generale",
@@ -181,7 +171,6 @@
     "confirm_reset_settings": "Sei sicuro di voler ripristinare le impostazioni predefinite?",
     "settings_reset": "Impostazioni ripristinate ai valori predefiniti",
     
-    // Updates
     "updates": "Aggiornamenti",
     "check_updates": "Controlla Aggiornamenti",
     "update_available": "Aggiornamento Disponibile",
@@ -202,14 +191,39 @@
     "never_checked": "Mai controllato",
     "last_checked": "Ultimo controllo",
     
-    // Help & About
     "help": "Aiuto",
-    "documentation": "Documentazione",
+    "movie_catalog_help": "Guida di Movie Catalog",
     "about": "Informazioni",
     "version": "Versione",
     "user_guide": "Guida Utente",
-    "report_issues": "Segnala Problemi",
-    "check_documentation": "Consulta la documentazione",
+    "usage": "Utilizzo",
+    "documentation": "Documentazione",
+    "support": "Supporto",
+    "keyboard_shortcuts": "Scorciatoie da Tastiera",
+    "basic_usage": "Utilizzo di Base",
+    "click_browse": "Fai clic sul pulsante 'Sfoglia' per selezionare una directory contenente i tuoi file video",
+    "click_scan": "Fai clic su 'Scansiona' per iniziare l'importazione dei film dalla directory selezionata",
+    "progress_shown": "Lo stato di avanzamento verrà mostrato nella barra di stato in basso",
+    "movies_displayed": "I film importati verranno visualizzati nella tabella principale",
+    "database_features": "Funzionalità del Database",
+    "auto_save_db": "Salva automaticamente la tua collezione di film in un database locale",
+    "load_from_db": "Carica la tua collezione dal database all'avvio",
+    "export_csv": "Esporta la tua collezione in CSV per backup o analisi",
+    "db_config": "Configura le impostazioni di connessione al database nella finestra delle opzioni",
+    "file_organization": "Organizzazione dei File",
+    "genre_directories": "Organizza i film in sottocartelle per genere (es. /Azione, /Commedia)",
+    "supported_formats": "Supporta i formati video comuni: .mp4, .mkv, .avi, .mov",
+    "genre_extraction": "Il genere viene estratto automaticamente dal nome della directory",
+    "name_extraction": "Il titolo del film viene estratto dal nome del file",
+    "official_docs": "Documentazione Ufficiale",
+    "view_online_docs": "Visualizza la documentazione online",
+    "api_reference": "Riferimento API",
+    "developer_guide": "Guida per Sviluppatori",
+    "frequently_asked_questions": "Domande Frequenti",
+    "getting_help": "Ottieni Aiuto",
+    "report_issue": "Segnala un Problema",
+    "join_community": "Unisciti alla Nostra Community",
+    "contact_developer": "Contatta lo Sviluppatore",
     "visit_website": "Visita il Sito Web",
     "github_repo": "Repository GitHub",
     "project_docs": "Documentazione del Progetto",
@@ -228,7 +242,6 @@
     "credits": "Crediti",
     "third_party_licenses": "Licenze di terze parti",
     
-    // Error Messages
     "error_occurred": "Si è verificato un errore",
     "operation_failed": "Operazione fallita",
     "operation_completed": "Operazione completata",
@@ -258,19 +271,33 @@
     "unsupported_media_type": "Tipo di media non supportato",
     "too_many_requests": "Troppe richieste",
     "internal_error": "Errore interno",
-    "not_implemented_error": "Funzionalità non implementata",
-    "bad_gateway_error": "Errore del gateway",
-    "service_unavailable_error": "Servizio non disponibile",
-    "gateway_timeout_error": "Timeout del gateway",
-    "version_not_supported": "Versione non supportata",
-    "variant_also_negotiates": "Variante negoziata",
-    "insufficient_storage": "Spazio di archiviazione insufficiente",
-    "loop_detected": "Rilevato ciclo",
-    "not_extended": "Non esteso",
-    "network_authentication_required": "Autenticazione di rete richiesta",
     "fatal_error": "Errore fatale",
     "unknown_error": "Errore sconosciuto",
     "try_again_later": "Riprova più tardi",
-    "contact_support": "Contatta l'assistenza",
-    "see_logs": "Consulta i log per maggiori dettagli"
+    "contact_support": "Contatta il supporto",
+    "see_logs": "Vedi i log per maggiori dettagli",
+    "database_tools": "Strumenti Database",
+    "create_database": "Crea Database",
+    "update_database": "Aggiorna Database",
+    "shortcut": "Scorciatoia",
+    "action": "Azione",
+    "open_movie": "Apri Film",
+    "delete_movie": "Elimina Film",
+    "refresh_list": "Aggiorna Elenco",
+    "open_settings": "Apri Impostazioni",
+    "toggle_fullscreen": "Attiva/Disattiva Schermo Intero",
+    "show_help": "Mostra Aiuto",
+    "database_created_success": "Database creato con successo!",
+    "database_updated_success": "Database aggiornato con successo!",
+    "database_creation_failed": "Errore durante la creazione del database",
+    "database_update_failed": "Errore durante l'aggiornamento del database",
+    "database_settings": "Configurazione Database",
+    "host": "Host",
+    "port": "Porta",
+    "user": "Utente",
+    "password": "Password",
+    "database": "Database",
+    "test_connection": "Test Connessione",
+    "connection_successful": "Connessione riuscita!",
+    "connection_failed": "Connessione fallita"
 }

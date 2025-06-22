@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.abspath('.'))
 project = 'Movie Catalog'
 copyright = f'{datetime.now().year}, Nsfr750'
 author = 'Nsfr750'
-release = '1.7.2'
+release = '1.9.0'
 
 # -- General configuration ---------------------------------------------------
 
@@ -132,7 +132,7 @@ napoleon_type_aliases = None
 
 # -- Version information -----------------------------------------------------
 # The short X.Y version
-version = '1.7'
+version = '1.9'
 
 # The full version, including alpha/beta/rc tags
-release = '1.7.2'
+release = '1.9.0'

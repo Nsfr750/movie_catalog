@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import Menu
+import lang.lang as lang
 from lang.lang import get_string, set_language
 from struttura.about import About
 from struttura.help import Help
@@ -26,8 +27,6 @@ class AppMenu:
         self.file_menu.add_command(label=get_string('open_database'), command=self.app.open_database)
         self.file_menu.add_command(label=get_string('close_database'), command=self.app.close_database)
         self.file_menu.add_separator()
-        self.file_menu.add_command(label=get_string('empty_database'), command=self.app.empty_database)
-        self.file_menu.add_separator()
         self.file_menu.add_command(label=get_string('exit'), command=self.root.quit)
 
         # Language menu
@@ -39,6 +38,26 @@ class AppMenu:
         # Tools menu
         self.tools_menu = Menu(self.menubar, tearoff=0)
         self.menubar.add_cascade(label=get_string('tools'), menu=self.tools_menu)
+        
+        # Database tools submenu
+        self.db_tools_menu = Menu(self.tools_menu, tearoff=0)
+        self.tools_menu.add_cascade(label=get_string('database_tools'), menu=self.db_tools_menu)
+        
+        # Add database tools
+        self.db_tools_menu.add_command(
+            label=get_string('create_database'),
+            command=self.run_create_database
+        )
+        self.db_tools_menu.add_command(
+            label=get_string('update_database'),
+            command=self.run_update_database
+        )
+        self.db_tools_menu.add_command(
+            label=get_string('empty_database'), 
+            command=self.app.empty_database
+        )
+        
+        self.tools_menu.add_separator()
         self.tools_menu.add_command(
             label=get_string('options'),
             command=self.app.show_options
@@ -79,6 +98,55 @@ class AppMenu:
     def show_log_viewer(self):
         """Show the log viewer window."""
         LogViewer(self.root)
+        
+    def run_create_database(self):
+        """Run the create_database script."""
+        try:
+            from struttura.create_database import main as create_db_main
+            create_db_main()
+            messagebox.showinfo(
+                get_string('success'),
+                get_string('database_created_success')
+            )
+        except Exception as e:
+            messagebox.showerror(
+                get_string('error'),
+                f"{get_string('database_creation_failed')}: {str(e)}"
+            )
+    
+    def run_update_database(self):
+        """Run the update_database script."""
+        try:
+            from struttura.update_database import main as update_db_main
+            update_db_main()
+            messagebox.showinfo(
+                get_string('success'),
+                get_string('database_updated_success')
+            )
+        except Exception as e:
+            messagebox.showerror(
+                get_string('error'),
+                f"{get_string('database_update_failed')}: {str(e)}"
+            )
+
+    def update_menu_texts(self):
+        """Update all menu texts with the current language"""
+        # Get current menu state
+        current_lang = lang.get_current_language()
+        
+        # Clear all menu items
+        self.menubar.delete(0, 'end')
+        
+        # Recreate the menu structure with updated texts
+        self.create_menu()
+        
+        # Restore the language selection
+        lang.set_language(current_lang)
+        
+        # Update dialogs if they have the update_texts method
+        for dialog in ['about_dialog', 'help_dialog']:
+            if hasattr(self, dialog) and hasattr(getattr(self, dialog), 'update_texts'):
+                getattr(self, dialog).update_texts()
 
     def update_menu_text(self):
         """Update all menu texts."""

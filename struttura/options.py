@@ -17,8 +17,17 @@ SETTINGS_FILE = APP_DIR / 'settings.json'
 DEFAULT_SETTINGS = {
     'appearance': {
         'theme': 'system',
-        'language': 'en',
-        'font_size': 10
+        'language': 'it',
+        'font_size': 9
+    },
+    'database': {
+        'host': 'localhost',
+        'port': 3306,
+        'user': 'root',
+        'password': '',
+        'database': 'movie_catalog',
+        'charset': 'utf8mb4',
+        'use_unicode': True
     },
     'updates': {
         'check_on_startup': True,
@@ -128,22 +137,161 @@ class OptionsDialog(tk.Toplevel):
         notebook = ttk.Notebook(main_frame)
         notebook.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
-        # General tab
-        general_frame = ttk.Frame(notebook, padding=10)
-        notebook.add(general_frame, text=tr('general'))
+        # Database tab
+        db_frame = ttk.Frame(notebook, padding="10")
+        self._create_database_tab(db_frame)
+        notebook.add(db_frame, text=tr('database'))
         
+        # Appearance tab
+        appearance_frame = ttk.Frame(notebook, padding="10")
+        self._create_appearance_tab(appearance_frame)
+        notebook.add(appearance_frame, text=tr('appearance'))
+        
+        # Updates tab
+        updates_frame = ttk.Frame(notebook, padding="10")
+        self._create_updates_tab(updates_frame)
+        notebook.add(updates_frame, text=tr('updates'))
+        
+        # Advanced tab
+        advanced_frame = ttk.Frame(notebook, padding="10")
+        self._create_advanced_tab(advanced_frame)
+        notebook.add(advanced_frame, text=tr('advanced'))
+        
+        # Button frame
+        btn_frame = ttk.Frame(main_frame)
+        btn_frame.pack(fill=tk.X, pady=(10, 0))
+        
+        # Buttons
+        ttk.Button(
+            btn_frame,
+            text=tr('ok'),
+            command=self._save_and_close
+        ).pack(side=tk.RIGHT, padx=5)
+        
+        ttk.Button(
+            btn_frame,
+            text=tr('cancel'),
+            command=self.destroy
+        ).pack(side=tk.RIGHT, padx=5)
+        
+        ttk.Button(
+            btn_frame,
+            text=tr('apply'),
+            command=self._apply_settings
+        ).pack(side=tk.RIGHT, padx=5)
+    
+    def _create_database_tab(self, parent):
+        """Create the database configuration tab."""
+        # Database section
+        ttk.Label(
+            parent, 
+            text=tr('database_settings'), 
+            font=('TkDefaultFont', 10, 'bold')
+        ).grid(row=0, column=0, columnspan=2, sticky='w', pady=(0, 10))
+        
+        # Host
+        ttk.Label(parent, text=f"{tr('host')}:").grid(row=1, column=0, sticky='w', padx=5, pady=5)
+        self.db_host_var = tk.StringVar(value=self.get_setting('database', 'host'))
+        ttk.Entry(
+            parent, 
+            textvariable=self.db_host_var,
+            width=30
+        ).grid(row=1, column=1, sticky='w', padx=5, pady=5)
+        
+        # Port
+        ttk.Label(parent, text=f"{tr('port')}:").grid(row=2, column=0, sticky='w', padx=5, pady=5)
+        self.db_port_var = tk.StringVar(value=str(self.get_setting('database', 'port')))
+        ttk.Spinbox(
+            parent,
+            from_=1,
+            to=65535,
+            textvariable=self.db_port_var,
+            width=10
+        ).grid(row=2, column=1, sticky='w', padx=5, pady=5)
+        
+        # Username
+        ttk.Label(parent, text=f"{tr('user')}:").grid(row=3, column=0, sticky='w', padx=5, pady=5)
+        self.db_user_var = tk.StringVar(value=self.get_setting('database', 'user'))
+        ttk.Entry(
+            parent, 
+            textvariable=self.db_user_var,
+            width=30
+        ).grid(row=3, column=1, sticky='w', padx=5, pady=5)
+        
+        # Password
+        ttk.Label(parent, text=f"{tr('password')}:").grid(row=4, column=0, sticky='w', padx=5, pady=5)
+        self.db_password_var = tk.StringVar(value=self.get_setting('database', 'password'))
+        ttk.Entry(
+            parent, 
+            textvariable=self.db_password_var,
+            show='*',
+            width=30
+        ).grid(row=4, column=1, sticky='w', padx=5, pady=5)
+        
+        # Database name
+        ttk.Label(parent, text=f"{tr('database')}:").grid(row=5, column=0, sticky='w', padx=5, pady=5)
+        self.db_name_var = tk.StringVar(value=self.get_setting('database', 'database'))
+        ttk.Entry(
+            parent, 
+            textvariable=self.db_name_var,
+            width=30
+        ).grid(row=5, column=1, sticky='w', padx=5, pady=5)
+        
+        # Test connection button
+        ttk.Button(
+            parent,
+            text=tr('test_connection'),
+            command=self._test_db_connection
+        ).grid(row=6, column=0, columnspan=2, pady=10)
+        
+        # Status label
+        self.db_status_var = tk.StringVar()
+        ttk.Label(
+            parent,
+            textvariable=self.db_status_var,
+            foreground='green'
+        ).grid(row=7, column=0, columnspan=2, pady=5)
+    
+    def _test_db_connection(self):
+        """Test the database connection with current settings."""
+        try:
+            import mysql.connector
+            from mysql.connector import Error
+            
+            config = {
+                'host': self.db_host_var.get(),
+                'port': int(self.db_port_var.get()),
+                'user': self.db_user_var.get(),
+                'password': self.db_password_var.get(),
+                'database': self.db_name_var.get(),
+                'raise_on_warnings': True
+            }
+            
+            conn = mysql.connector.connect(**config)
+            conn.ping(reconnect=True, attempts=3, delay=5)
+            conn.close()
+            
+            self.db_status_var.set(tr('connection_successful'))
+            self.db_status_var.configure(foreground='green')
+            
+        except Error as e:
+            self.db_status_var.set(f"{tr('connection_failed')}: {str(e)}")
+            self.db_status_var.configure(foreground='red')
+    
+    def _create_appearance_tab(self, parent):
+        """Create the appearance tab."""
         # Appearance section
         ttk.Label(
-            general_frame, 
+            parent, 
             text=tr('appearance'), 
             font=('TkDefaultFont', 10, 'bold')
         ).grid(row=0, column=0, columnspan=2, sticky='w', pady=(0, 10))
         
         # Theme selection
-        ttk.Label(general_frame, text=f"{tr('theme')}:").grid(row=1, column=0, sticky='w', padx=5, pady=5)
+        ttk.Label(parent, text=f"{tr('theme')}:").grid(row=1, column=0, sticky='w', padx=5, pady=5)
         self.theme_var = tk.StringVar(value=self.get_setting('appearance', 'theme'))
         theme_combo = ttk.Combobox(
-            general_frame, 
+            parent, 
             textvariable=self.theme_var,
             values=['light', 'dark', 'system'],
             state='readonly',
@@ -152,10 +300,346 @@ class OptionsDialog(tk.Toplevel):
         theme_combo.grid(row=1, column=1, sticky='w', padx=5, pady=5)
         
         # Language selection
-        ttk.Label(general_frame, text=f"{tr('language')}:").grid(row=2, column=0, sticky='w', padx=5, pady=5)
+        ttk.Label(parent, text=f"{tr('language')}:").grid(row=2, column=0, sticky='w', padx=5, pady=5)
+        self.lang_var = tk.StringVar(value=self.get_setting('appearance', 'language'))
+        lang_combo = ttk.Combobox(
+            parent, 
+            textvariable=self.lang_var,
+            values=['it', 'en'],
+            state='readonly',
+            width=15
+        )
+        lang_combo.grid(row=2, column=1, sticky='w', padx=5, pady=5)
+        
+        # Font size
+        ttk.Label(parent, text=f"{tr('font_size')}:").grid(row=3, column=0, sticky='w', padx=5, pady=5)
+        self.font_size_var = tk.StringVar(value=str(self.get_setting('appearance', 'font_size')))
+        ttk.Spinbox(
+            parent,
+            from_=8,
+            to=24,
+            textvariable=self.font_size_var,
+            width=5
+        ).grid(row=3, column=1, sticky='w', padx=5, pady=5)
+    
+    def _create_updates_tab(self, parent):
+        """Create the updates tab."""
+        # Updates section
+        ttk.Label(
+            parent, 
+            text=tr('update_settings'), 
+            font=('TkDefaultFont', 10, 'bold')
+        ).grid(row=0, column=0, columnspan=2, sticky='w', pady=(0, 10))
+        
+        # Check for updates on startup
+        self.check_updates_var = tk.BooleanVar(value=self.get_setting('updates', 'check_on_startup'))
+        ttk.Checkbutton(
+            parent,
+            text=tr('check_updates_startup'),
+            variable=self.check_updates_var
+        ).grid(row=1, column=0, columnspan=2, sticky='w', padx=5, pady=5)
+        
+        # Update channel
+        ttk.Label(parent, text=f"{tr('update_channel')}:").grid(row=2, column=0, sticky='w', padx=5, pady=5)
+        self.channel_var = tk.StringVar(value=self.get_setting('updates', 'channel'))
+        channel_combo = ttk.Combobox(
+            parent,
+            textvariable=self.channel_var,
+            values=['stable', 'beta', 'development'],
+            state='readonly',
+            width=15
+        )
+        channel_combo.grid(row=2, column=1, sticky='w', padx=5, pady=5)
+        
+        # Last checked label
+        last_checked = self.get_setting('updates', 'last_checked')
+        last_checked_text = f"{tr('last_checked')}: {last_checked}" if last_checked else tr('never_checked')
+        self.last_checked_var = tk.StringVar(value=last_checked_text)
+        ttk.Label(
+            parent,
+            textvariable=self.last_checked_var
+        ).grid(row=3, column=0, columnspan=2, sticky='w', padx=5, pady=5)
+        
+        # Check now button
+        ttk.Button(
+            parent,
+            text=tr('check_now'),
+            command=self._check_for_updates
+        ).grid(row=4, column=0, columnspan=2, pady=10)
+    
+    def _create_advanced_tab(self, parent):
+        """Create the advanced tab."""
+        # Logging section
+        ttk.Label(
+            parent, 
+            text=tr('logging'), 
+            font=('TkDefaultFont', 10, 'bold')
+        ).grid(row=0, column=0, columnspan=3, sticky='w', pady=(0, 10))
+        
+        # Log level
+        ttk.Label(parent, text=f"{tr('log_level')}:").grid(row=1, column=0, sticky='w', padx=5, pady=5)
+        self.log_level_var = tk.StringVar(value=self.get_setting('advanced', 'log_level'))
+        log_level_combo = ttk.Combobox(
+            parent, 
+            textvariable=self.log_level_var,
+            values=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
+            state='readonly',
+            width=15
+        )
+        log_level_combo.grid(row=1, column=1, sticky='w', padx=5, pady=5)
+        
+        # Log file location
+        ttk.Label(parent, text=f"{tr('log_location')}:").grid(row=2, column=0, sticky='w', padx=5, pady=5)
+        self.log_location_var = tk.StringVar(value=self.get_setting('advanced', 'log_location'))
+        ttk.Entry(
+            parent, 
+            textvariable=self.log_location_var,
+            width=40
+        ).grid(row=2, column=1, sticky='we', padx=5, pady=5)
+        ttk.Button(
+            parent,
+            text=tr('browse'),
+            command=lambda: self._browse_directory(self.log_location_var)
+        ).grid(row=2, column=2, padx=5, pady=5)
+        
+        # Analytics
+        self.analytics_var = tk.BooleanVar(value=self.get_setting('advanced', 'enable_analytics'))
+        ttk.Checkbutton(
+            parent,
+            text=tr('enable_analytics'),
+            variable=self.analytics_var
+        ).grid(row=3, column=0, columnspan=3, sticky='w', padx=5, pady=5)
+    
+    def _browse_directory(self, var):
+        """Open a directory selection dialog."""
+        directory = filedialog.askdirectory()
+        if directory:
+            var.set(directory)
+    
+    def _check_for_updates(self):
+        """Check for updates now."""
+        # This is a placeholder for the actual update check
+        # In a real application, you would call your update module here
+        self.last_checked_var.set(f"{tr('last_checked')}: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        messagebox.showinfo(
+            tr('checking_updates'),
+            tr('checking_for_updates')
+        )
+    
+    def _apply_settings(self):
+        """Apply the current settings without closing the dialog."""
+        try:
+            # Save appearance settings
+            self.set_setting('appearance', 'theme', self.theme_var.get())
+            self.set_setting('appearance', 'language', self.lang_var.get())
+            self.set_setting('appearance', 'font_size', int(self.font_size_var.get()))
+            
+            # Save database settings
+            self.set_setting('database', 'host', self.db_host_var.get())
+            self.set_setting('database', 'port', int(self.db_port_var.get()))
+            self.set_setting('database', 'user', self.db_user_var.get())
+            self.set_setting('database', 'password', self.db_password_var.get())
+            self.set_setting('database', 'database', self.db_name_var.get())
+            
+            # Save updates settings
+            self.set_setting('updates', 'check_on_startup', self.check_updates_var.get())
+            self.set_setting('updates', 'channel', self.channel_var.get())
+            
+            # Save advanced settings
+            self.set_setting('advanced', 'log_level', self.log_level_var.get())
+            self.set_setting('advanced', 'log_location', self.log_location_var.get())
+            self.set_setting('advanced', 'enable_analytics', self.analytics_var.get())
+            
+            # Save to file
+            if self.save_settings():
+                messagebox.showinfo(
+                    tr('settings_saved'),
+                    tr('settings_saved_message')
+                )
+                return True
+            else:
+                messagebox.showerror(
+                    tr('error'),
+                    tr('error_saving_settings')
+                )
+                return False
+        except Exception as e:
+            messagebox.showerror(
+                tr('error'),
+                f"{tr('error_processing_settings')}: {str(e)}"
+            )
+            return False
+    
+    def _save_and_close(self):
+        """Save settings and close the dialog."""
+        if self._apply_settings():
+            self.destroy()
+            # Notify parent that settings were saved
+            if hasattr(self.parent, 'on_settings_saved'):
+                self.parent.on_settings_saved()
+        """Ensure all default settings are present in the loaded settings."""
+        for category, values in DEFAULT_SETTINGS.items():
+            if category not in self.settings:
+                self.settings[category] = values
+            else:
+                for key, value in values.items():
+                    if key not in self.settings[category]:
+                        self.settings[category][key] = value
+    
+    def save_settings(self):
+        """Save current settings to file."""
+        try:
+            with open(self.settings_file, 'w', encoding='utf-8') as f:
+                json.dump(self.settings, f, indent=4, ensure_ascii=False)
+            return True
+        except (IOError, TypeError) as e:
+            print(f"Error saving settings: {e}")
+            return False
+    
+    def get_setting(self, category, key, default=None):
+        """Get a specific setting value."""
+        return self.settings.get(category, {}).get(key, default)
+    
+    def set_setting(self, category, key, value):
+        """Set a specific setting value."""
+        if category not in self.settings:
+            self.settings[category] = {}
+        self.settings[category][key] = value
+    
+    def _create_widgets(self):
+        """Create and arrange the UI widgets."""
+        # Main frame
+        main_frame = ttk.Frame(self, padding="10")
+        main_frame.pack(fill=tk.BOTH, expand=True)
+        
+        # Create notebook for different settings sections
+        notebook = ttk.Notebook(main_frame)
+        notebook.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        
+        # Database tab
+        db_frame = ttk.Frame(notebook, padding="10")
+        self._create_database_tab(db_frame)
+        notebook.add(db_frame, text=tr('database'))
+        
+        # Appearance tab
+        appearance_frame = ttk.Frame(notebook, padding="10")
+        self._create_appearance_tab(appearance_frame)
+        notebook.add(appearance_frame, text=tr('appearance'))
+        
+        # Updates tab
+        updates_frame = ttk.Frame(notebook, padding="10")
+        self._create_updates_tab(updates_frame)
+        notebook.add(updates_frame, text=tr('updates'))
+        
+        # Advanced tab
+        advanced_frame = ttk.Frame(notebook, padding="10")
+        self._create_advanced_tab(advanced_frame)
+        notebook.add(advanced_frame, text=tr('advanced'))
+        
+        # Button frame
+        btn_frame = ttk.Frame(main_frame)
+        btn_frame.pack(fill=tk.X, pady=(10, 0))
+        
+        # Buttons
+        ttk.Button(
+            btn_frame,
+            text=tr('apply'),
+            command=self._apply_settings
+        ).pack(side=tk.RIGHT, padx=5)
+        
+        ttk.Button(
+            btn_frame,
+            text=tr('cancel'),
+            command=self.destroy
+        ).pack(side=tk.RIGHT, padx=5)
+        
+        ttk.Button(
+            btn_frame,
+            text=tr('ok'),
+            command=self._save_and_close
+        ).pack(side=tk.RIGHT, padx=5)
+    
+    def _create_database_tab(self, frame):
+        """Create the database tab."""
+        # Database section
+        ttk.Label(
+            frame, 
+            text=tr('database_settings'), 
+            font=('TkDefaultFont', 10, 'bold')
+        ).grid(row=0, column=0, columnspan=2, sticky='w', pady=(0, 10))
+        
+        # Host
+        ttk.Label(frame, text=f"{tr('host')}:").grid(row=1, column=0, sticky='w', padx=5, pady=5)
+        self.db_host_var = tk.StringVar(value=self.get_setting('database', 'host'))
+        ttk.Entry(
+            frame, 
+            textvariable=self.db_host_var,
+            width=30
+        ).grid(row=1, column=1, sticky='w', padx=5, pady=5)
+        
+        # Port
+        ttk.Label(frame, text=f"{tr('port')}:").grid(row=2, column=0, sticky='w', padx=5, pady=5)
+        self.db_port_var = tk.StringVar(value=str(self.get_setting('database', 'port')))
+        ttk.Entry(
+            frame, 
+            textvariable=self.db_port_var,
+            width=10
+        ).grid(row=2, column=1, sticky='w', padx=5, pady=5)
+        
+        # User
+        ttk.Label(frame, text=f"{tr('user')}:").grid(row=3, column=0, sticky='w', padx=5, pady=5)
+        self.db_user_var = tk.StringVar(value=self.get_setting('database', 'user'))
+        ttk.Entry(
+            frame, 
+            textvariable=self.db_user_var,
+            width=30
+        ).grid(row=3, column=1, sticky='w', padx=5, pady=5)
+        
+        # Password
+        ttk.Label(frame, text=f"{tr('password')}:").grid(row=4, column=0, sticky='w', padx=5, pady=5)
+        self.db_password_var = tk.StringVar(value=self.get_setting('database', 'password'))
+        ttk.Entry(
+            frame, 
+            textvariable=self.db_password_var,
+            width=30,
+            show='*'
+        ).grid(row=4, column=1, sticky='w', padx=5, pady=5)
+        
+        # Database
+        ttk.Label(frame, text=f"{tr('database')}:").grid(row=5, column=0, sticky='w', padx=5, pady=5)
+        self.db_name_var = tk.StringVar(value=self.get_setting('database', 'database'))
+        ttk.Entry(
+            frame, 
+            textvariable=self.db_name_var,
+            width=30
+        ).grid(row=5, column=1, sticky='w', padx=5, pady=5)
+    
+    def _create_appearance_tab(self, frame):
+        """Create the appearance tab."""
+        # Appearance section
+        ttk.Label(
+            frame, 
+            text=tr('appearance'), 
+            font=('TkDefaultFont', 10, 'bold')
+        ).grid(row=0, column=0, columnspan=2, sticky='w', pady=(0, 10))
+        
+        # Theme selection
+        ttk.Label(frame, text=f"{tr('theme')}:").grid(row=1, column=0, sticky='w', padx=5, pady=5)
+        self.theme_var = tk.StringVar(value=self.get_setting('appearance', 'theme'))
+        theme_combo = ttk.Combobox(
+            frame, 
+            textvariable=self.theme_var,
+            values=['light', 'dark', 'system'],
+            state='readonly',
+            width=15
+        )
+        theme_combo.grid(row=1, column=1, sticky='w', padx=5, pady=5)
+        
+        # Language selection
+        ttk.Label(frame, text=f"{tr('language')}:").grid(row=2, column=0, sticky='w', padx=5, pady=5)
         self.lang_var = tk.StringVar(value=self.get_setting('appearance', 'language'))
         self.lang_combo = ttk.Combobox(
-            general_frame, 
+            frame, 
             textvariable=self.lang_var,
             values=[('English', 'en'), ('Italiano', 'it')],
             state='readonly',
@@ -164,23 +648,21 @@ class OptionsDialog(tk.Toplevel):
         self.lang_combo.grid(row=2, column=1, sticky='w', padx=5, pady=5)
         
         # Font size
-        ttk.Label(general_frame, text=f"{tr('font_size')}:").grid(row=3, column=0, sticky='w', padx=5, pady=5)
+        ttk.Label(frame, text=f"{tr('font_size')}:").grid(row=3, column=0, sticky='w', padx=5, pady=5)
         self.font_size_var = tk.StringVar(value=str(self.get_setting('appearance', 'font_size')))
         ttk.Spinbox(
-            general_frame,
+            frame,
             from_=8,
             to=24,
             textvariable=self.font_size_var,
             width=5
         ).grid(row=3, column=1, sticky='w', padx=5, pady=5)
-        
-        # Updates tab
-        updates_frame = ttk.Frame(notebook, padding=10)
-        notebook.add(updates_frame, text=tr('updates'))
-        
+    
+    def _create_updates_tab(self, frame):
+        """Create the updates tab."""
         # Updates section
         ttk.Label(
-            updates_frame, 
+            frame, 
             text=tr('update_settings'), 
             font=('TkDefaultFont', 10, 'bold')
         ).grid(row=0, column=0, columnspan=2, sticky='w', pady=(0, 10))
@@ -188,6 +670,7 @@ class OptionsDialog(tk.Toplevel):
         # Check for updates on startup
         self.check_updates_var = tk.BooleanVar(value=self.get_setting('updates', 'check_on_startup'))
         ttk.Checkbutton(
+            frame,
             updates_frame,
             text=tr('check_updates_startup'),
             variable=self.check_updates_var

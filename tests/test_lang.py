@@ -2,7 +2,7 @@ import sys
 import os
 
 # Add the parent directory to the path so we can import the lang module
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '.')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from lang.lang import set_language, get_string, get_current_language, get_available_languages
 

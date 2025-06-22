@@ -1,5 +1,4 @@
 {
-    // Main Application
     "app_title": "Movie Catalog",
     "file_menu": "File",
     "exit_menu": "Exit",
@@ -27,7 +26,6 @@
     "filter": "Filter",
     "reset_filters": "Reset Filters",
     
-    // Database
     "db_config_failed": "Failed to configure database",
     "db_not_initialized": "Database not initialized",
     "db_created": "Database created successfully!",
@@ -46,7 +44,6 @@
     "create_new_db": "Do you want to create a new database?",
     "close_database": "Do you want to close the current database?",
     
-    // Status Messages
     "operation_timed_out": "Operation timed out. The database might be busy. Please try again.",
     "operation_failed_after_retries": "Operation failed after several attempts",
     "connection_error": "Database connection error",
@@ -59,10 +56,9 @@
     "done": "Done!",
     "failed": "Failed",
     "scanning": "Scanning...",
-    "scan_complete": "Scan complete",
+    "scan_complete_status": "Scan complete",
     "settings_saved_message": "Settings saved successfully",
     
-    // Movie Management
     "movie_details": "Movie Details",
     "add_movie": "Add Movie",
     "edit_movie": "Edit Movie",
@@ -76,7 +72,6 @@
     "select_movie": "Select a movie",
     "no_movie_selected": "No movie selected",
     
-    // Movie Fields
     "title": "Title",
     "director": "Director",
     "year": "Year",
@@ -101,7 +96,6 @@
     "actions": "Actions",
     "select_image": "Select Image",
     
-    // File Operations
     "file_not_found": "File not found",
     "invalid_file": "Invalid file",
     "file_too_large": "File is too large",
@@ -115,7 +109,6 @@
     "file_saved": "File saved successfully",
     "error_saving_file": "Error saving file",
     
-    // Import/Export
     "import": "Import",
     "export": "Export",
     "import_csv": "Import from CSV",
@@ -136,11 +129,9 @@
     "missing_required_fields": "Missing required fields in CSV: {fields}",
     "row_error": "Error on row {row}: {error}",
     
-    // Scanning
     "scan_films": "Scan Films",
     "scan_directory": "Scan Directory",
     "scan_failed": "Scan failed",
-    "scan_complete": "Scan complete",
     "scan_results": "Scan Results",
     "files_found": "{count} files found",
     "movies_imported": "{count} movies imported",
@@ -149,7 +140,6 @@
     "scan_in_progress": "Scan in progress...",
     "scan_completed_with_errors": "Scan completed with {count} errors",
     
-    // Logging
     "log_viewer": "Log Viewer",
     "logging": "Logging",
     "log_level": "Log Level",
@@ -165,7 +155,6 @@
     "select_all": "Select All",
     "clear_display": "Clear Display",
     
-    // Settings
     "settings": "Settings",
     "preferences": "Preferences",
     "general": "General",
@@ -181,7 +170,6 @@
     "confirm_reset_settings": "Are you sure you want to reset all settings to default?",
     "settings_reset": "Settings have been reset to default values",
     
-    // Updates
     "updates": "Updates",
     "check_updates": "Check for Updates",
     "update_available": "Update Available",
@@ -202,9 +190,8 @@
     "never_checked": "Never checked",
     "last_checked": "Last checked",
     
-    // Help & About
     "help": "Help",
-    "documentation": "Documentation",
+    "movie_catalog_help": "Movie Catalog Help",
     "about": "About",
     "version": "Version",
     "user_guide": "User Guide",
@@ -228,7 +215,6 @@
     "credits": "Credits",
     "third_party_licenses": "Third-Party Licenses",
     
-    // Error Messages
     "error_occurred": "An error occurred",
     "operation_failed": "Operation failed",
     "operation_completed": "Operation completed",
@@ -272,5 +258,58 @@
     "unknown_error": "Unknown Error",
     "try_again_later": "Please try again later",
     "contact_support": "Contact Support",
-    "see_logs": "See logs for more details"
+    "see_logs": "See logs for more details",
+    "database_tools": "Database Tools",
+    "create_database": "Create Database",
+    "update_database": "Update Database",
+    
+    "usage": "Usage",
+    "documentation": "Documentation",
+    "support": "Support",
+    "keyboard_shortcuts": "Keyboard Shortcuts",
+    "basic_usage": "Basic Usage",
+    "click_browse": "Click the 'Browse' button to select a directory containing your movie files",
+    "click_scan": "Click 'Scan' to start importing movies from the selected directory",
+    "progress_shown": "Progress will be shown in the status bar at the bottom",
+    "movies_displayed": "Imported movies will be displayed in the main table",
+    "database_features": "Database Features",
+    "auto_save_db": "Automatically saves your movie collection to a local database",
+    "load_from_db": "Loads your collection from the database on startup",
+    "export_csv": "Export your collection to CSV for backup or analysis",
+    "db_config": "Configure database connection settings in the Options dialog",
+    "file_organization": "File Organization",
+    "genre_directories": "Organize movies in subdirectories by genre (e.g., /Action, /Comedy)",
+    "supported_formats": "Supports common video formats: .mp4, .mkv, .avi, .mov",
+    "genre_extraction": "Genre is automatically extracted from the directory name",
+    "name_extraction": "Movie name is extracted from the filename",
+    "official_docs": "Official Documentation",
+    "view_online_docs": "View online documentation",
+    "api_reference": "API Reference",
+    "developer_guide": "Developer Guide",
+    "frequently_asked_questions": "Frequently Asked Questions",
+    "getting_help": "Getting Help",
+    "report_issue": "Report an Issue",
+    "join_community": "Join our Community",
+    "contact_developer": "Contact Developer",
+    "shortcut": "Shortcut",
+    "action": "Action",
+    "open_movie": "Open Movie",
+    "delete_movie": "Delete Movie",
+    "refresh_list": "Refresh List",
+    "open_settings": "Open Settings",
+    "toggle_fullscreen": "Toggle Fullscreen",
+    "show_help": "Show Help",
+    "database_created_success": "Database created successfully!",
+    "database_updated_success": "Database updated successfully!",
+    "database_creation_failed": "Failed to create database",
+    "database_update_failed": "Failed to update database",
+    "database_settings": "Database Settings",
+    "host": "Host",
+    "port": "Port",
+    "user": "User",
+    "password": "Password",
+    "database": "Database",
+    "test_connection": "Test Connection",
+    "connection_successful": "Connection successful!",
+    "connection_failed": "Connection failed"
 }

@@ -38,7 +38,7 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler(),
-        RotatingFileHandler('movie_catalog.log', maxBytes=5*1024*1024, backupCount=5)
+        RotatingFileHandler('logs/movie_catalog.log', maxBytes=5*1024*1024, backupCount=5)
     ]
 )
 
@@ -568,6 +568,7 @@ class MovieCatalogApp:
 
     def update_ui_texts(self):
         """Update all UI texts to the current language."""
+        # Update window title
         self.root.title(f"{lang.get_string('app_title')} v{__version__}")
         
         # Update directory frame
@@ -577,6 +578,35 @@ class MovieCatalogApp:
         # Update browse button
         if hasattr(self, 'browse_btn'):
             self.browse_btn.config(text=lang.get_string('browse'))
+        
+        # Update search frame
+        if hasattr(self, 'search_entry'):
+            self.search_entry.delete(0, 'end')
+            self.search_entry.insert(0, lang.get_string('search_placeholder'))
+        if hasattr(self, 'search_btn'):
+            self.search_btn.config(text=lang.get_string('search'))
+        
+        # Update action buttons
+        if hasattr(self, 'scan_btn'):
+            self.scan_btn.config(text=lang.get_string('scan_films'))
+        if hasattr(self, 'export_btn'):
+            self.export_btn.config(text=lang.get_string('export_csv'))
+        if hasattr(self, 'import_btn'):
+            self.import_btn.config(text=lang.get_string('import_csv'))
+        if hasattr(self, 'add_btn'):
+            self.add_btn.config(text=lang.get_string('add_movie'))
+        
+        # Update treeview columns
+        if hasattr(self, 'tree'):
+            self.tree.heading('#1', text=lang.get_string('id'))
+            self.tree.heading('#2', text=lang.get_string('genre'))
+            self.tree.heading('#3', text=lang.get_string('title'))
+            self.tree.heading('#4', text=lang.get_string('year'))
+            self.tree.heading('#5', text=lang.get_string('path'))
+        
+        # Update status bar
+        if hasattr(self, 'status_bar'):
+            self.update_status(lang.get_string('ready'))
         
         # Update actions frame
         if hasattr(self, 'actions_frame'):
