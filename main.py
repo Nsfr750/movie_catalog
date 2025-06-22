@@ -326,11 +326,11 @@ class Database:
     def check_database_contents(self):
         """Check database connection and list tables/contents"""
         try:
-            if not self.database or not self.database.connection or not self.database.connection.is_connected():
+            if not self.db or not self.db.connection or not self.db.connection.is_connected():
                 print("No active database connection")
                 return False
                 
-            cursor = self.database.connection.cursor(dictionary=True)
+            cursor = self.db.connection.cursor(dictionary=True)
             
             # List all tables in the database
             cursor.execute("SHOW TABLES")
@@ -647,22 +647,22 @@ class MovieCatalogApp:
     
     def _new_database(self):
         """Create a new database"""
-        if self.database.initialize():
+        if self.db.initialize():
             messagebox.showinfo(lang.get_string('success'), lang.get_string('db_created'))
         else:
             messagebox.showerror(lang.get_string('error'), lang.get_string('db_create_failed'))
     
     def _open_database(self):
         """Open database configuration form"""
-        if self.database.db:
-            self.database.db.config.show_config_form()
+        if self.db.db:
+            self.db.db.config.show_config_form()
         else:
             messagebox.showerror(lang.get_string('error'), lang.get_string('db_not_initialized'))
     
     def _close_database(self):
         """Close database connection"""
-        if self.database.db:
-            self.database.db.close_connection()
+        if self.db.db:
+            self.db.db.close_connection()
             messagebox.showinfo(lang.get_string('success'), lang.get_string('db_closed'))
         else:
             messagebox.showerror(lang.get_string('error'), lang.get_string('db_not_initialized'))
@@ -689,6 +689,40 @@ class MovieCatalogApp:
         
         # Controlli di ordinamento
         self._create_sort_controls()
+    
+    def _setup_gui(self):
+        """Configura l'interfaccia grafica principale"""
+        try:
+            # Crea il frame principale
+            self.main_frame = ttk.Frame(self.root)
+            self.main_frame.pack(fill='both', expand=True, padx=5, pady=5)
+            
+            # Crea i controlli di ordinamento
+            self._create_sort_controls()
+            
+            # Crea la treeview
+            self._create_tree_view()
+            
+            # Crea la barra di stato
+            self._create_status_bar()
+            
+            # Crea il menu
+            self.menu = AppMenu(self)
+            
+            # Imposta la lingua predefinita
+            self.set_language('it')
+            
+            # Aggiorna lo stato
+            self.update_status('Pronto')
+            
+        except Exception as e:
+            error_msg = f"Errore durante la creazione dell'interfaccia: {str(e)}"
+            self.logger.error(error_msg, exc_info=True)
+            messagebox.showerror(
+                "Errore",
+                f"Impossibile creare l'interfaccia: {str(e)}"
+            )
+            raise
     
     def _create_directory_frame(self):
         """Create directory selection frame"""
@@ -800,138 +834,45 @@ class MovieCatalogApp:
     
     def _create_status_bar(self):
         """Create status bar"""
-        self.status_frame = ttk.Label(
-            self.root, 
-            text=lang.get_string('ready'),
-            relief=tk.SUNKEN,
-            anchor=tk.W
+        self.status_frame = ttk.Frame(self.root)
+        self.status_frame.pack(fill='x', side='bottom', padx=5, pady=5)
+        
+        # Etichetta per il conteggio film
+        self.movie_count_label = ttk.Label(
+            self.status_frame, 
+            text="0 film", 
+            anchor='w',
+            padding=(5, 2)
         )
-        self.status_frame.pack(side=tk.BOTTOM, fill=tk.X)
+        self.movie_count_label.pack(side='left', fill='x', expand=True)
         
-        # Aggiorna il contatore iniziale
-        self.update_movie_count(len(self.database.get_all_movies() if self.database else []))
+        # Etichetta per lo stato
+        self.status_label = ttk.Label(
+            self.status_frame, 
+            text="Pronto", 
+            anchor='e',
+            padding=(5, 2)
+        )
+        self.status_label.pack(side='right')
         
+        # Aggiorna il conteggio iniziale
+        try:
+            movie_count = len(self.db.get_all_movies()) if hasattr(self, 'db') and self.db else 0
+            self.update_movie_count(movie_count)
+        except Exception as e:
+            self.logger.error(f"Errore durante il conteggio iniziale dei film: {str(e)}")
+            self.update_movie_count(0)
+    
     def update_movie_count(self, count):
         """Aggiorna il contatore dei film nella barra di stato"""
-        if hasattr(self, 'status_frame'):
-            self.status_frame.config(text=f"{lang.get_string('total_movies')}: {count}")
-            
-    def _create_search_frame(self):
-        """Create search frame with search box and button"""
-        self.search_frame = ttk.Frame(self.main_frame)
-        self.search_frame.pack(fill='x', padx=10, pady=(5, 0))
-        
-        # Search label
-        ttk.Label(self.search_frame, text=tr('search') + ':').pack(side='left', padx=(0, 5))
-        
-        # Search entry with placeholder
-        self.search_var = tk.StringVar()
-        self.search_entry = ttk.Entry(
-            self.search_frame, 
-            textvariable=self.search_var, 
-            width=40,
-            style='Search.TEntry'
-        )
-        self.search_entry.pack(side='left', fill='x', expand=True)
-        self.search_entry.bind('<KeyRelease>', self.on_search)
-        self.search_entry.bind('<FocusIn>', self._on_search_focus_in)
-        self.search_entry.bind('<FocusOut>', self._on_search_focus_out)
-        
-        # Set initial placeholder
-        self._show_placeholder()
-        
-        # Clear button
-        self.clear_btn = ttk.Button(
-            self.search_frame, 
-            text=tr('clear'), 
-            command=self._clear_search,
-            width=8
-        )
-        self.clear_btn.pack(side='left', padx=(5, 0))
-        
-        # Initialize movies list
-        if not hasattr(self, 'all_movies'):
-            self.all_movies = []
-        
-    def _show_placeholder(self):
-        """Show placeholder text in search box"""
-        if not self.search_var.get():
-            self.search_entry.insert(0, tr('search_placeholder'))
-            self.search_entry.config(foreground='grey')
+        if hasattr(self, 'movie_count_label'):
+            self.movie_count_label.config(text=f"{count} {lang.get_string('movies')}")
     
-    def _hide_placeholder(self):
-        """Hide placeholder text"""
-        if self.search_var.get() == tr('search_placeholder'):
-            self.search_entry.delete(0, tk.END)
-            self.search_entry.config(foreground='black')
-    
-    def _on_search_focus_in(self, event):
-        """Handle focus in event for search box"""
-        if self.search_var.get() == tr('search_placeholder'):
-            self._hide_placeholder()
-    
-    def _on_search_focus_out(self, event):
-        """Handle focus out event for search box"""
-        if not self.search_var.get():
-            self._show_placeholder()
-
-    def _on_search_change(self, event=None):
-        """Handle search text changes"""
-        # Skip if the change was due to placeholder text
-        if hasattr(self, 'search_var') and self.search_var.get() == tr('search_placeholder'):
-            return
-            
-        search_term = self.search_var.get().lower() if hasattr(self, 'search_var') else ''
-        
-        # Clear current selection
-        for item in self.tree.get_children():
-            self.tree.delete(item)
-        
-        # If search is empty, show all movies
-        if not search_term:
-            for movie in self.all_movies:
-                # Use the movie's path as the unique ID since it should be unique for each movie
-                item_id = f"{movie[3]}"  # Assuming path is the 4th element (0-based index 3)
-                try:
-                    self.tree.insert('', 'end', values=movie[1:], iid=item_id)
-                except tk.TclError:
-                    # If item already exists, skip it
-                    continue
-            return
-        
-        # Filter movies based on search term
-        found = False
-        for movie in self.all_movies:
-            # Check if any field contains the search term
-            if any(search_term in str(field).lower() for field in movie[1:]):
-                item_id = f"{movie[3]}"  # Using path as the unique ID
-                try:
-                    self.tree.insert('', 'end', values=movie[1:], iid=item_id)
-                    found = True
-                except tk.TclError:
-                    # If item already exists, skip it
-                    continue
-        
-        # Show message if no results found
-        if not found and search_term:
-            self.tree.insert('', 'end', values=['', tr('no_results'), ''], tags=('no_results',))
-            self.tree.tag_configure('no_results', foreground='gray', font=('TkDefaultFont', 9, 'italic'))
-
-    def _clear_search(self):
-        """Clear the search box and show all movies"""
-        if hasattr(self, 'search_var'):
-            self.search_var.set('')
-            self._on_search_change()
-            if hasattr(self, 'search_entry'):
-                self._show_placeholder()
-                self.search_entry.focus_set()
-
     def update_status(self, message):
         """Aggiorna il messaggio di stato"""
-        if hasattr(self, 'status_frame'):
-            self.status_frame.config(text=message)
-        self.root.update_idletasks()  # Force update to show status changes immediately
-
+        if hasattr(self, 'status_label'):
+            self.status_label.config(text=str(message))
+    
     def browse_directory(self):
         """Browse for directory"""
         directory = filedialog.askdirectory()
@@ -952,8 +893,8 @@ class MovieCatalogApp:
                     os.remove(db_path)
                 
                 # Create new database
-                self.database = Database(db_path)
-                if not self.database.initialize():
+                self.db = Database(db_path)
+                if not self.db.initialize():
                     raise Exception("Failed to initialize database")
                 
                 # Update GUI - only clear tree if it exists
@@ -973,7 +914,7 @@ class MovieCatalogApp:
             except Exception as e:
                 messagebox.showerror(lang.get_string('error'), f"{lang.get_string('db_create_failed')}: {str(e)}")
                 # Reset database to None if creation fails
-                self.database = None
+                self.db = None
                 return False
         return False
 
@@ -985,8 +926,8 @@ class MovieCatalogApp:
         )
         if filename:
             try:
-                self.database = Database(filename)
-                if not self.database.initialize():
+                self.db = Database(filename)
+                if not self.db.initialize():
                     raise Exception("Failed to initialize database")
                 
                 # Update GUI - only clear tree if it exists
@@ -1005,7 +946,7 @@ class MovieCatalogApp:
                 return True
             except Exception as e:
                 messagebox.showerror(lang.get_string('error'), f"{lang.get_string('db_open_failed')}: {str(e)}")
-                self.database = None
+                self.db = None
                 return False
         return False
 
@@ -1013,7 +954,7 @@ class MovieCatalogApp:
         """Close the current database"""
         if messagebox.askyesno(lang.get_string('close_database'), lang.get_string('close_db')):
             try:
-                self.database = None
+                self.db = None
                 if self.tree:
                     self.tree.delete(*self.tree.get_children())
                 if hasattr(self, 'close_database_btn'):
@@ -1041,7 +982,7 @@ class MovieCatalogApp:
 
     def start_scan(self):
         """Start scanning for movies in selected directory"""
-        if not self.database:
+        if not self.db:
             messagebox.showwarning(lang.get_string('error'), lang.get_string('db_not_initialized'))
             return
             
@@ -1088,7 +1029,7 @@ class MovieCatalogApp:
                         # Store all results in one batch
                         if self.movies_to_save:  # Only save if there are movies to save
                             print(f"Saving {len(self.movies_to_save)} movies to database...")
-                            success = self.database.store_scanned_files(self.movies_to_save)
+                            success = self.db.store_scanned_files(self.movies_to_save)
                             if not success:
                                 messagebox.showerror("Error", "Failed to save some movies to the database")
                         
@@ -1139,7 +1080,7 @@ class MovieCatalogApp:
 
     def export_to_csv(self):
         """Export movies to a CSV file"""
-        if not hasattr(self, 'database') or not self.database:
+        if not hasattr(self, 'db') or not self.db:
             messagebox.showerror("Error", "Database not connected")
             return
             
@@ -1150,7 +1091,7 @@ class MovieCatalogApp:
         )
         
         if filename:
-            count = self.database.export_to_csv(filename)
+            count = self.db.export_to_csv(filename)
             if count > 0:
                 messagebox.showinfo(
                     lang.get_string('export_success'),
@@ -1177,7 +1118,7 @@ class MovieCatalogApp:
         Returns:
             tuple: (success: bool, imported_count: int, error_message: str)
         """
-        if not hasattr(self, 'database') or not self.database:
+        if not hasattr(self, 'db') or not self.db:
             messagebox.showerror(
                 lang.get_string('error'),
                 lang.get_string('database_not_connected')
@@ -1222,7 +1163,7 @@ class MovieCatalogApp:
             self.logger.info(f"Attempting to import movies from: {filename}")
             
             # Perform the import
-            imported_count, skipped_count, error_count, error_details = self.database.import_from_csv(filename)
+            imported_count, skipped_count, error_count, error_details = self.db.import_from_csv(filename)
             
             # Log the result
             self.logger.info(
@@ -1280,12 +1221,12 @@ class MovieCatalogApp:
 
     def load_from_database(self):
         """Load movies from database into treeview"""
-        if not self.database:
+        if not self.db:
             messagebox.showwarning(lang.get_string('error'), lang.get_string('db_not_initialized'))
             return
             
         try:
-            movies = self.database.get_all_movies()
+            movies = self.db.get_all_movies()
             if not self.tree:
                 self._create_tree_view()
             
@@ -1356,14 +1297,14 @@ class MovieCatalogApp:
 
     def _add_movie_with_metadata(self):
         """Open the movie details dialog to add a new movie with metadata."""
-        if not hasattr(self, 'database') or not self.database:
+        if not hasattr(self, 'db') or not self.db:
             messagebox.showwarning(tr('error'), tr('db_not_initialized'))
             return
             
         def on_save_metadata(metadata):
             try:
                 # Save the movie to the database
-                success = self.database.add_movie_with_metadata(
+                success = self.db.add_movie_with_metadata(
                     title=metadata['title'],
                     year=metadata['year'],
                     path="",  # You'll need to set this
@@ -1399,7 +1340,7 @@ class MovieCatalogApp:
 
     def empty_database(self):
         """Svuota il database dei film"""
-        if not hasattr(self, 'database') or self.database is None:
+        if not hasattr(self, 'db') or self.db is None:
             messagebox.showerror(
                 lang.get_string('error'),
                 lang.get_string('db_not_initialized')
@@ -1430,7 +1371,7 @@ class MovieCatalogApp:
             for attempt in range(max_retries):
                 try:
                     # Prova a svuotare il database
-                    success = self.database.empty_database()
+                    success = self.db.empty_database()
                     if success:
                         break
                         
@@ -1599,12 +1540,12 @@ if __name__ == "__main__":
         
         # Check database connection and contents
         print("\n=== Database Status ===")
-        if hasattr(app, 'database') and app.database:
+        if hasattr(app, 'db') and app.db:
             print("Database connection established")
             
             # List all tables
             try:
-                cursor = app.database.connection.cursor(dictionary=True)
+                cursor = app.db.connection.cursor(dictionary=True)
                 cursor.execute("SHOW TABLES")
                 tables = cursor.fetchall()
                 print("\n=== Database Tables ===")
@@ -1630,7 +1571,7 @@ if __name__ == "__main__":
                 # List all movies if movies table exists
                 if any('movies' in t.values() for t in tables):
                     print("\n=== Movies in Database ===")
-                    cursor = app.database.connection.cursor(dictionary=True)
+                    cursor = app.db.connection.cursor(dictionary=True)
                     cursor.execute("SELECT COUNT(*) as count FROM movies")
                     count = cursor.fetchone()['count']
                     print(f"Found {count} movies in database")
