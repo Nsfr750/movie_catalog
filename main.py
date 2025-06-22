@@ -495,82 +495,34 @@ class MovieScanner:
 
 class MovieCatalogApp:
     def __init__(self, root):
-        """Initialize the application."""
+        """Inizializza l'applicazione"""
         self.root = root
-        self.root.title(f"Movie Catalog v{__version__}")
-        self.root.geometry("1000x600")
+        self.root.title("Movie Catalog")
+        self.root.geometry("1200x800")
         
-        # Make sure the window is visible
-        self.root.deiconify()
-        self.root.lift()
-        self.root.focus_force()
-        
-        # Set up logging and exception handling
+        # Inizializza il logger
         self._setup_logging()
-        print("Logging setup complete")
+        self.logger.info("Inizializzazione dell'applicazione...")
         
-        # Configure styles
-        self._configure_styles()
-        print("Styles configured")
-        
-        # Initialize components
-        self.result_queue = queue.Queue()
-        self.movies_to_save = []
-        self.scanning = False
-        
-        # Inizializza le variabili di ordinamento
-        self.sort_by = tk.StringVar(value='title')
-        self.sort_order = tk.StringVar(value='ASC')
-        
-        # Show loading message
-        loading_label = ttk.Label(
-            self.root, 
-            text="Initializing database...", 
-            font=('Helvetica', 12)
-        )
-        loading_label.pack(expand=True)
-        self.root.update()  # Force UI update
-        
+        # Inizializza il database
+        self.db = Database(self.root)
         try:
-            # Initialize database
-            print("Initializing database...")
-            self.database = Database(root)
-            if not self.database.initialize():
-                print("Database initialization failed")
-                if messagebox.askretrycancel("Error", "Failed to initialize database. Retry?"):
-                    self.root.after(100, self.retry_database_init)
-                    return
-                else:
-                    self.root.quit()
-                    return
-                    
-            # Remove loading message and create main UI
-            loading_label.destroy()
-            
-            # Create main frame and UI components
-            print("Creating main UI components...")
-            self.main_frame = ttk.Frame(self.root)
-            self.main_frame.pack(fill='both', expand=True)
-            
-            self._create_gui_components()
-            self.menu = AppMenu(self)
-            self.update_status('Ready')
-            self.set_language('en')
-            
-            print("Application initialization complete")
-            
+            self.db.initialize()
+            self.logger.info("Database inizializzato con successo")
         except Exception as e:
-            import traceback
-            error_msg = f"Failed to initialize application: {str(e)}\n\n{traceback.format_exc()}"
-            print(error_msg)
-            messagebox.showerror("Fatal Error", f"Failed to start application:\n{str(e)}")
-            self.root.quit()
-    
-    def retry_database_init(self):
-        """Retry database initialization"""
-        if hasattr(self, 'main_frame'):
-            self.main_frame.destroy()
-        self.__init__(self.root)
+            self.logger.error(f"Errore durante l'inizializzazione del database: {str(e)}")
+            messagebox.showerror(
+                "Errore",
+                f"Impossibile connettersi al database: {str(e)}"
+            )
+            self.root.destroy()
+            return
+        
+        # Inizializza l'interfaccia utente
+        self._setup_gui()
+        
+        # Carica i film all'avvio
+        self.load_movies_from_database()
     
     def _setup_logging(self):
         """Set up logging and exception handling."""
@@ -650,55 +602,43 @@ class MovieCatalogApp:
             self.status_frame.config(text=lang.get_string('ready'))
 
     def load_movies_from_database(self, search_term=None):
-        """Carica i film dal database nell'albero con supporto per ricerca e ordinamento"""
-        if not self.database:
-            messagebox.showwarning(lang.get_string('error'), lang.get_string('db_not_initialized'))
-            return
-            
+        """Carica i film dal database con i filtri e l'ordinamento correnti"""
         try:
             # Ottieni i parametri di ordinamento
-            sort_by = getattr(self, 'sort_by', tk.StringVar(value='title')).get()
+            sort_field = getattr(self, 'sort_by', tk.StringVar(value='title')).get()
             sort_order = getattr(self, 'sort_order', tk.StringVar(value='ASC')).get()
             
-            # Stampa di debug per verificare i parametri
-            print(f"Ordinamento richiesto: campo={sort_by}, ordine={sort_order}")
+            # Stampa di debug
+            print(f"Ordinamento richiesto: campo={sort_field}, ordine={sort_order}")
             
-            # Recupera i film con l'ordinamento specificato
-            movies = self.database.get_all_movies(sort_by=sort_by, sort_order=sort_order)
+            # Recupera i film dal database
+            movies = self.db.get_all_movies(sort_by=sort_field, sort_order=sort_order)
             
-            # Filtra i risultati se è specificato un termine di ricerca
-            if search_term:
-                search_term = search_term.lower()
-                movies = [m for m in movies if any(
-                    search_term in str(field).lower() 
-                    for field in m 
-                    if field is not None
-                )]
+            # Filtra i film in base al termine di ricerca se specificato
+            if search_term and search_term.strip():
+                search_term = search_term.lower().strip()
+                movies = [
+                    m for m in movies 
+                    if search_term in (m.get('title', '') or '').lower() or 
+                       search_term in (m.get('movie_name', '') or '').lower() or
+                       search_term in (m.get('genre', '') or '').lower() or
+                       search_term in (m.get('director', '') or '').lower() or
+                       str(m.get('year', '') or '').startswith(search_term)
+                ]
             
-            # Pulisci la vista attuale
-            for item in self.tree.get_children():
-                self.tree.delete(item)
+            # Aggiorna la vista ad albero
+            self._update_treeview(movies)
             
-            # Se non ci sono film, mostra un messaggio
-            if not movies:
-                self.tree.insert('', 'end', values=[lang.get_string('no_movies_found')])
-                return
-            
-            # Popola la treeview con i film
-            for movie in movies:
-                # Converti i valori None in stringhe vuote per la visualizzazione
-                movie_display = [str(field) if field is not None else '' for field in movie]
-                self.tree.insert('', 'end', values=movie_display)
-            
-            # Aggiorna il contatore
-            self.update_movie_count(len(movies))
+            # Aggiorna il contatore dei film
+            self._update_movie_count(len(movies))
             
         except Exception as e:
+            error_msg = f"Errore durante il caricamento dei film: {str(e)}"
+            self.logger.error(error_msg)
             messagebox.showerror(
-                lang.get_string('error'), 
-                f"Errore durante il caricamento dei film: {str(e)}"
+                lang.get_string('error'),
+                error_msg
             )
-            self.logger.error(f"Errore nel caricamento dei film: {str(e)}")
     
     def on_search(self, event=None):
         """Gestisce l'evento di ricerca"""
@@ -1545,35 +1485,36 @@ class MovieCatalogApp:
         if not hasattr(self, 'sort_order'):
             self.sort_order = tk.StringVar(value='ASC')
         
+        # Mappa i nomi visualizzati ai nomi dei campi del database
+        self.sort_fields = [
+            (lang.get_string('sort_field_title'), 'title'),
+            (lang.get_string('sort_field_movie_name'), 'movie_name'),
+            (lang.get_string('sort_field_year'), 'year'),
+            (lang.get_string('sort_field_genre'), 'genre'),
+            (lang.get_string('sort_field_rating'), 'rating'),
+            (lang.get_string('sort_field_runtime'), 'runtime'),
+            (lang.get_string('sort_field_path'), 'path')
+        ]
+        
+        # Crea un dizionario per la ricerca inversa
+        self.display_to_field = {display: field for display, field in self.sort_fields}
+        self.field_to_display = {field: display for display, field in self.sort_fields}
+        
         # Etichetta e menu a tendina per il campo di ordinamento
         ttk.Label(sort_frame, text=lang.get_string('sort_field') + ":").pack(side='left', padx=5)
         
-        # Opzioni di ordinamento con testi localizzati
-        sort_options = [
-            ('title', lang.get_string('sort_field_title')),
-            ('year', lang.get_string('sort_field_year')),
-            ('genre', lang.get_string('sort_field_genre')),
-            ('rating', lang.get_string('sort_field_rating')),
-            ('runtime', lang.get_string('sort_field_runtime')),
-            ('path', lang.get_string('sort_field_path')),
-            ('movie_name', lang.get_string('sort_field_movie_name'))
-        ]
-        
         # Crea il menu a tendina con i valori localizzati
-        sort_menu = ttk.Combobox(
+        self.sort_menu = ttk.Combobox(
             sort_frame, 
-            textvariable=self.sort_by,
-            values=[opt[1] for opt in sort_options],
+            values=[display for display, _ in self.sort_fields],
             state='readonly',
             width=15
         )
-        sort_menu.pack(side='left', padx=5)
+        self.sort_menu.pack(side='left', padx=5)
         
         # Imposta il valore predefinito
-        sort_menu.set(lang.get_string('sort_field_title'))
-        
-        # Mappa i valori localizzati ai nomi dei campi del database
-        self.sort_field_map = {opt[1]: opt[0] for opt in sort_options}
+        default_display = self.field_to_display.get(self.sort_by.get(), self.sort_fields[0][0])
+        self.sort_menu.set(default_display)
         
         # Pulsanti per l'ordine crescente/decrescente
         sort_order_frame = ttk.Frame(sort_frame)
@@ -1599,11 +1540,11 @@ class MovieCatalogApp:
         ttk.Button(
             sort_frame, 
             text=lang.get_string('refresh'),
-            command=self.load_movies_from_database
+            command=self.on_sort_changed
         ).pack(side='right', padx=5)
         
         # Associa l'evento di cambio selezione al menu a tendina
-        sort_menu.bind('<<ComboboxSelected>>', self.on_sort_changed)
+        self.sort_menu.bind('<<ComboboxSelected>>', self.on_sort_changed)
         
         # Pulsante per resettare i filtri
         ttk.Button(
@@ -1611,10 +1552,41 @@ class MovieCatalogApp:
             text=lang.get_string('reset_filters'),
             command=self.reset_filters
         ).pack(side='right', padx=5)
-        
+    
     def on_sort_changed(self, event=None):
         """Gestisce il cambio del criterio di ordinamento"""
         self.load_movies_from_database()
+
+    def reset_filters(self):
+        """Reimposta tutti i filtri e l'ordinamento ai valori predefiniti"""
+        try:
+            # Reimposta i valori di ordinamento
+            if hasattr(self, 'sort_by'):
+                self.sort_by.set('title')
+            if hasattr(self, 'sort_order'):
+                self.sort_order.set('ASC')
+            
+            # Pulisci eventuali termini di ricerca
+            if hasattr(self, 'search_var'):
+                self.search_var.set('')
+            
+            # Ricarica i film senza filtri
+            self.load_movies_from_database()
+            
+            # Aggiorna la vista per mostrare il reset
+            if hasattr(self, 'tree'):
+                self.tree.see('')
+            
+            # Log dell'azione
+            self.logger.info("Filtri reimpostati ai valori predefiniti")
+            
+        except Exception as e:
+            error_msg = f"Errore durante il reset dei filtri: {str(e)}"
+            self.logger.error(error_msg)
+            messagebox.showerror(
+                lang.get_string('error'),
+                error_msg
+            )
 
 if __name__ == "__main__":
     try:
