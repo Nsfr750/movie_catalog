@@ -58,9 +58,35 @@ class Database:
         self.connection = None
         self.cursor = None
         self.is_mysql = True  # We're using MySQL
-        self.logger = logger.logger.getChild('Database')
-        self.logger.info("Database handler inizializzato")
         
+        # Initialize logger safely
+        self._init_logger()
+        
+        self.logger.info("Database handler initialized")
+    
+    def _init_logger(self):
+        """Initialize the logger for this class"""
+        try:
+            # Try to use the application logger if available
+            if hasattr(self.root, 'logger'):
+                self.logger = self.root.logger.getChild('Database')
+            else:
+                # Fallback to basic logging
+                import logging
+                self.logger = logging.getLogger('MovieCatalog.Database')
+                if not self.logger.handlers:
+                    # Configure basic logging if no handlers are set up
+                    logging.basicConfig(
+                        level=logging.INFO,
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+                    )
+        except Exception as e:
+            # Last resort - create a basic logger
+            import logging
+            self.logger = logging.getLogger('MovieCatalog.Database')
+            logging.basicConfig(level=logging.INFO)
+            self.logger.error(f"Failed to initialize custom logger: {e}")
+            
     def initialize(self):
         """Initialize the database connection"""
         try:
@@ -548,21 +574,35 @@ class MovieCatalogApp:
     
     def _setup_logging(self):
         """Set up logging and exception handling."""
-        # Configure the root logger
-        logger.logger.info("Starting Movie Catalog")
-        
-        # Set up global exception handling
-        setup_exception_handling()
-        
-        # Log system information
-        import platform
-        logger.logger.info(f"Python version: {platform.python_version()}")
-        logger.logger.info(f"System: {platform.system()} {platform.release()}")
-        logger.logger.info(f"Working directory: {os.getcwd()}")
-        
-        # Initialize logger for this class
-        self.logger = logging.getLogger('MovieCatalog.App')
-        self.logger.info("Inizializzazione dell'applicazione")
+        try:
+            # Import the logger module
+            import logger
+            
+            # Configure the root logger
+            logger.setup_logging()
+            
+            # Log application start
+            logger.logger.info("Starting Movie Catalog Application")
+            
+            # Set up global exception handling
+            if hasattr(logger, 'setup_exception_handling'):
+                logger.setup_exception_handling()
+            
+            # Log system information
+            import platform
+            logger.logger.info(f"Python version: {platform.python_version()}")
+            logger.logger.info(f"System: {platform.system()} {platform.release()}")
+            
+            # Store logger reference
+            self.logger = logger.logger
+            
+        except Exception as e:
+            # Fallback to basic logging if custom logger fails
+            import logging
+            logging.basicConfig(level=logging.INFO)
+            self.logger = logging.getLogger(__name__)
+            self.logger.error(f"Failed to setup custom logger: {str(e)}")
+            self.logger.info("Using basic logging configuration")
     
     def set_language(self, lang_code):
         """Set the application language and update all UI texts."""
