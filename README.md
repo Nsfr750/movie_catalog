@@ -1,6 +1,6 @@
 # 🎬 Movie Catalog
 
-[![GitHub release](https://img.shields.io/github/v/release/Nsfr750/movie_catalog?style=for-the-badge)](https://github.com/Nsfr750/movie_catalog/releases)
+[![GitHub release](https://img.shields.io/github/v/release/Nsfr750/movie_catalog/v1.9.0?style=for-the-badge)](https://github.com/Nsfr750/movie_catalog/releases/tag/v1.9.0)
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg?style=for-the-badge)](https://github.com/Nsfr750/movie_catalog/graphs/commit-activity)

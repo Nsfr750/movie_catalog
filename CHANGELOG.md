@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2025-06-23
+
+### Added
+- Comprehensive FAQ documentation
+- Detailed troubleshooting guide
+- Improved documentation structure with Sphinx
+- Added new screenshots and updated documentation
+- Enhanced error handling for file operations
+
+### Changed
+- Updated dependencies to their latest versions
+- Improved logging for better debugging
+- Enhanced UI responsiveness
+- Optimized database queries for better performance
+
+### Fixed
+- Fixed issues with file path handling on different operating systems
+- Resolved minor UI glitches
+- Fixed documentation formatting issues
+- Addressed various linting warnings
+
 
 ## [1.8.2] - 2025-06-22 
 
