@@ -10,7 +10,7 @@ from typing import Any, Dict, Optional
 # Default configuration
 DEFAULT_CONFIG = {
     'app': {
-        'language': 'en',
+        'language': 'it',
         'theme': 'system',
         'window_width': 1000,
         'window_height': 700,

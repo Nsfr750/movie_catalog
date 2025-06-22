@@ -26,6 +26,8 @@ class AppMenu:
         self.file_menu.add_command(label=get_string('open_database'), command=self.app.open_database)
         self.file_menu.add_command(label=get_string('close_database'), command=self.app.close_database)
         self.file_menu.add_separator()
+        self.file_menu.add_command(label=get_string('empty_database'), command=self.app.empty_database)
+        self.file_menu.add_separator()
         self.file_menu.add_command(label=get_string('exit'), command=self.root.quit)
 
         # Language menu
@@ -84,7 +86,8 @@ class AppMenu:
         self.file_menu.entryconfig(0, label=get_string('new_database'))
         self.file_menu.entryconfig(1, label=get_string('open_database'))
         self.file_menu.entryconfig(2, label=get_string('close_database'))
-        self.file_menu.entryconfig(4, label=get_string('exit'))
+        self.file_menu.entryconfig(4, label=get_string('empty_database'))
+        self.file_menu.entryconfig(6, label=get_string('exit'))
 
         self.menubar.entryconfig(self.menubar.index(self.lang_menu), label=get_string('language_menu'))
 

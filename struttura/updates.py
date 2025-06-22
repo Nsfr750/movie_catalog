@@ -8,6 +8,11 @@ from typing import Optional, Tuple, Callable
 import requests
 import json
 from pathlib import Path
+import os
+
+# Get the application directory
+APP_DIR = Path(__file__).parent.parent
+UPDATES_FILE = APP_DIR / 'updates.json'
 
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -23,7 +28,7 @@ class UpdateChecker:
             config_path: Path to the configuration file (optional).
         """
         self.current_version = current_version
-        self.config_path = config_path or Path.home() / ".movie_catalog" / "updates.json"
+        self.config_path = config_path or UPDATES_FILE
         self.config = self._load_config()
         self.update_url = "https://api.github.com/repos/Nsfr750/movie_catalog/releases/latest"
     

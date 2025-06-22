@@ -1,0 +1,24 @@
+{
+    "appearance": {
+        "theme": "dark",
+        "language": "Italiano it",
+        "font_size": 9
+    },
+    "updates": {
+        "check_on_startup": true,
+        "channel": "stable",
+        "last_checked": null
+    },
+    "advanced": {
+        "log_level": "DEBUG",
+        "log_location": "X:/GitHub/movie_catalog/logs",
+        "enable_analytics": true
+    },
+    "window": {
+        "width": 1024,
+        "height": 768,
+        "x": null,
+        "y": null,
+        "maximized": false
+    }
+}
