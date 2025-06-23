@@ -18,9 +18,9 @@ class MySQLConfig:
         self.root = root
         self.config_file = 'mysql_config.json'
         self.default_config = {
-            'host': 'localhost',
-            'user': 'root',
-            'password': '22243',
+            'host': 'db-host',
+            'user': 'db-user',
+            'password': 'db-pw',
             'database': 'movie_catalog'
         }
         self.config = self.load_config()

@@ -11,7 +11,7 @@
     },
     "advanced": {
         "log_level": "DEBUG",
-        "log_location": "X:/GitHub/movie_catalog/logs",
+        "log_location": "logs",
         "enable_analytics": true
     },
     "window": {
