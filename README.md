@@ -115,6 +115,7 @@ movie_catalog/
 ├── 📜 CHANGELOG.md       # Project version history
 ├── ✅ TO_DO.md           # Development to-do list
 ├── ⚙️ settings.json      # Application settings
+├── ⚙️ setup.py           # 
 ├── ⚙️ updates.json       # Update information
 └── ⚙️ mysql_config.json  # MySQL configuration file
 ```
